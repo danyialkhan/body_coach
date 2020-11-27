@@ -18,7 +18,7 @@ class CategoryList extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.9,
       height: MediaQuery.of(context).size.height * 0.3,
       child: StreamBuilder< List<CategoryModel>>(
-        stream: CategoryService(uId: user.uId).categoriesStream(),
+        stream: CategoryService(uId: user.uId).allCategoriesStream(),
         builder: (ctx, snapshot) {
           if(snapshot.hasData) {
             List<CategoryModel> models = snapshot.data;

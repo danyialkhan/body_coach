@@ -33,6 +33,7 @@ class Auth with ChangeNotifier {
         email: email,
         mobileNumber: '0000-000-000',
         name: 'user',
+        dob: DateTime.now(),
       );
 
       return _userFromFirebaseUser(user);

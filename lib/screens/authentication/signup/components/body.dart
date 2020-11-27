@@ -1,5 +1,6 @@
 import 'package:body_coach/screens/authentication/login/login_screen.dart';
 import 'package:body_coach/screens/authentication/signup/components/social_icon.dart';
+import 'package:body_coach/screens/wrapper.dart';
 import 'package:body_coach/services/auth.dart';
 import 'package:body_coach/shared/already_have_an_account_acheck.dart';
 import 'package:body_coach/shared/constants.dart';
@@ -98,7 +99,9 @@ class _BodyState extends State<Body> {
                   if (_formKey.currentState.validate()) {
                     _toggleIsLoading();
                     await Auth().signUp(_email, _password);
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(context, MaterialPageRoute(
+                      builder: (ctx) => Wrapper()
+                    ));
                     _toggleIsLoading();
                   }
                 } catch (e) {

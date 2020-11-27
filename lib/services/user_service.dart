@@ -66,6 +66,7 @@ class UserService {
               city: city,
               address: address,
               isoCode: isoCode,
+              email: email,
               gender: gender)
           .toJson());
     } catch (e) {

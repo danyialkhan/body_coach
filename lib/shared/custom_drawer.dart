@@ -32,7 +32,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   _getUserData(String uid) async {
     _toggleIsLoading();
     _userProfile = await UserService(uId: uid).getUser();
-    if (_userProfile.isAdmin)
+    if (_userProfile?.isAdmin ?? false)
       _showAdmin = true;
     else
       _showAdmin = false;

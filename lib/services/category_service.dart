@@ -207,9 +207,14 @@ class CategoryService {
         .map(_modelsFromSnapshot);
   }
 
+  Stream<List<CategoryModel>> allCategoriesStream() {
+    return _catRef
+        .snapshots()
+        .map(_modelsFromSnapshot);
+  }
+
   Stream<List<CategoryModel>> featuredCategoriesStream() {
     return _catRef
-        .where('ownerId', isEqualTo: uId)
         .where('isFeatured', isEqualTo: true)
         .snapshots()
         .map(_modelsFromSnapshot);

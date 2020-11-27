@@ -51,7 +51,7 @@ class UserProfile {
       address: data['address'],
       city: data['city'],
       country: data['country'],
-      dob: data['dob'].toDate(),
+      dob: data['dob']?.toDate() ?? DateTime.now(),
       email: data['email'],
       imgUrl: data['img'],
       mobileNumber: data['mobile_number'],
