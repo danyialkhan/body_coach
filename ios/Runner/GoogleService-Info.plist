@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>422785301700-25802r9daa29e6qns16emopmuc22ajh2.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.422785301700-25802r9daa29e6qns16emopmuc22ajh2</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>422785301700-h64pg2it91hab689ormvrhvdvch2unkc.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyD1o8U6Kpy8CgptThXlHBV1LXsGLhUCg60</string>
+	<key>GCM_SENDER_ID</key>
+	<string>422785301700</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.bodycoach.bodyCoach</string>
+	<key>PROJECT_ID</key>
+	<string>bodycoach-702a0</string>
+	<key>STORAGE_BUCKET</key>
+	<string>bodycoach-702a0.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:422785301700:ios:e211b724ee6a1e9dd81d91</string>
+	<key>DATABASE_URL</key>
+	<string>https://bodycoach-702a0.firebaseio.com</string>
+</dict>
+</plist>

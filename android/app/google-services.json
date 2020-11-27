@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "422785301700",
+    "firebase_url": "https://bodycoach-702a0.firebaseio.com",
+    "project_id": "bodycoach-702a0",
+    "storage_bucket": "bodycoach-702a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422785301700:android:e3d86b256d64ab9ad81d91",
+        "android_client_info": {
+          "package_name": "com.bodycoach.body_coach"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "422785301700-h64pg2it91hab689ormvrhvdvch2unkc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bodycoach.body_coach",
+            "certificate_hash": "3fa2a053c2f9ae944239d3713db58c1a741b173b"
+          }
+        },
+        {
+          "client_id": "422785301700-ek3771veq7s7nmq8rqivtcs71q2439q3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5z2E_2XcKnz6qQN3_88KNgPBl5V9Jpug"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "422785301700-ek3771veq7s7nmq8rqivtcs71q2439q3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
