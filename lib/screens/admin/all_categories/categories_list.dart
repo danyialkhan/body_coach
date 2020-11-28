@@ -11,6 +11,7 @@ class AllCategories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     showAlertDialog(BuildContext ctx, {String cId}) {
+      print('$cId');
       // set up the buttons
       Widget cancelButton = FlatButton(
         child: Text("Cancel"),
@@ -22,6 +23,7 @@ class AllCategories extends StatelessWidget {
         child: Text("Yes"),
         onPressed: () async {
           await CategoryService(catId: cId).deleteCategory();
+          Navigator.of(ctx).pop();
         },
       );
 
