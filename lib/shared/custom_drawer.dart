@@ -7,6 +7,7 @@ import 'package:body_coach/screens/subscribetion_view/all_subscribtions.dart';
 import 'package:body_coach/services/auth.dart';
 import 'package:body_coach/services/user_service.dart';
 import 'package:body_coach/shared/constants.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -56,24 +57,26 @@ class _CustomDrawerState extends State<CustomDrawer> {
             crossAxisAlignment: CrossAxisAlignment.center,
 //      mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              new Container(
+              Container(
                 width: 190.0,
                 height: 190.0,
-                decoration: new BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: Colors.blueAccent,
                     width: 4,
                   ),
-                  image: new DecorationImage(
-                    fit: BoxFit.cover,
-                    image: new AssetImage('assets/trainer/bg3.jpg'),
+                  image: DecorationImage(
+                    fit: BoxFit.scaleDown,
+                    image: _userProfile?.imgUrl == null ?
+                    AssetImage('assets/user.png')
+                        : CachedNetworkImageProvider(_userProfile?.imgUrl),
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(25.0),
-                child: new Text("RS Doe", textScaleFactor: 1.5),
+                child: Text(_userProfile?.name ?? 'User', textScaleFactor: 1.5),
               )
             ],
           ),

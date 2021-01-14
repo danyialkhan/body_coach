@@ -1,5 +1,6 @@
 import 'package:body_coach/models/category_model.dart';
 import 'package:body_coach/shared/constants.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CategoryCard extends StatelessWidget {
@@ -15,9 +16,9 @@ class CategoryCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(15.0),
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: course.imgUrl == null
+          image: course?.imgUrl == null
               ? AssetImage('assets/picture.png')
-              : NetworkImage(course.imgUrl),
+              : CachedNetworkImageProvider(course?.imgUrl),
         ),
       ),
       child: Padding(
@@ -26,7 +27,7 @@ class CategoryCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              course.title,
+              course?.title ?? '',
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,

@@ -1,5 +1,7 @@
+import 'package:body_coach/models/category_model.dart';
 import 'package:body_coach/models/subscribers.dart';
 import 'package:body_coach/models/user_profile.dart';
+import 'package:body_coach/services/category_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserService {
@@ -7,6 +9,9 @@ class UserService {
   UserService({this.uId});
 
   CollectionReference _usersRef = Firestore.instance.collection("Users");
+
+  String _myStudents = "my_students";
+  String _myCourses = "my_courses";
 
   // Save user Data in FireStore
   Future updateUser({
@@ -88,17 +93,33 @@ class UserService {
     }
   }
 
+  Future sendRequest({
+    String name,
+    String id,
+    String subscribed,
+    String subImg,
+    String subscribedImg,
+    String catId,
+  }) async {
+    try {
+      
+    } catch (e) {
+      print('SEND REQ ERR: $e');
+    }
+  }
+
   Future addSubscribedCategory({
     String name,
     String id,
     String subscribed,
     String subImg,
     String subscribedImg,
+    String catId,
   }) async {
     try {
       await _usersRef
           .document(uId)
-          .collection('subscriptions')
+          .collection(_myCourses)
           .document(id)
           .setData(Subscribers(
             subName: name,
@@ -107,23 +128,30 @@ class UserService {
             subscribedId: uId,
             subImgUrl: subImg,
             subscribedImgUrl: subscribedImg,
+            joinedTime: Timestamp.now(),
+            subCat: catId,
           ).toJson());
     } catch (e) {
       print(e);
     }
   }
 
-  Future addUserSubscriptions({
+  Future addMyStudent({
     String name,
     String id,
     String subscribed,
     String subImg,
     String subscribedImg,
+    String catId,
+    String catName,
+    List<dynamic> students,
   }) async {
     try {
       await _usersRef
           .document(uId)
-          .collection('user_subscriptions')
+          .collection(_myStudents)
+          .document(catId)
+          .collection('students')
           .document(id)
           .setData(Subscribers(
             subName: name,
@@ -132,19 +160,45 @@ class UserService {
             subscribedId: uId,
             subImgUrl: subImg,
             subscribedImgUrl: subscribedImg,
+            joinedTime: Timestamp.now(),
+            subCat: catId,
           ).toJson());
+
+      await _usersRef
+          .document(uId)
+          .collection(_myStudents)
+          .document(catId)
+          .collection('students')
+          .document(id)
+          .setData(
+              CategoryModel(students: students, title: catName).toJsonStu());
     } catch (e) {
       print(e);
     }
   }
 
-  Future removeUserSubscriptions({String id}) async {
+  Future removeMyStudent({String id, String catId}) async {
     try {
       await _usersRef
           .document(uId)
-          .collection('user_subscriptions')
+          .collection(_myStudents)
+          .document(catId)
+          .collection('students')
           .document(id)
           .delete();
+
+      CategoryModel model = await CategoryService(catId: catId).getCategory();
+
+      await _usersRef
+          .document(uId)
+          .collection(_myStudents)
+          .document(catId)
+          .setData(
+            CategoryModel(
+              students: model.students,
+              title: model.title,
+            ).toJsonStu(),
+          );
     } catch (e) {
       print(e);
     }
@@ -154,7 +208,7 @@ class UserService {
     try {
       await _usersRef
           .document(uId)
-          .collection('subscriptions')
+          .collection(_myCourses)
           .document(id)
           .delete();
     } catch (e) {
@@ -169,29 +223,31 @@ class UserService {
   Stream<bool> checkSubscribed({String catId}) {
     return _usersRef
         .document(uId)
-        .collection('subscriptions')
+        .collection(_myCourses)
         .document(catId)
         .snapshots()
         .map(_isSubscribed);
   }
 
   List<Subscribers> _getSubscriptions(QuerySnapshot snapshot) {
+    print('Length: ${snapshot.documents.length}');
     return snapshot.documents
-        .map((e) => Subscribers(id: e.documentID).fromJson(e.data)).toList();
+        .map((e) => Subscribers(id: e.documentID).fromJson(e.data))
+        .toList();
   }
 
   Stream<List<Subscribers>> getSubscriptions({String catId}) {
     return _usersRef
         .document(uId)
-        .collection('subscriptions')
+        .collection(_myCourses)
         .snapshots()
         .map(_getSubscriptions);
   }
 
-  Stream<List<Subscribers>> getALlSubscribers({String catId}) {
+  Stream<List<Subscribers>> getAllStudents({String catId}) {
     return _usersRef
         .document(uId)
-        .collection('user_subscriptions')
+        .collection(_myStudents)
         .snapshots()
         .map(_getSubscriptions);
   }

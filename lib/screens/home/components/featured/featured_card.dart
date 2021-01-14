@@ -1,5 +1,6 @@
 import 'package:body_coach/models/data/fitness_app_data.dart';
 import 'package:body_coach/screens/home/views/workout_view.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class FeaturedCard extends StatelessWidget {
@@ -46,7 +47,7 @@ class FeaturedCard extends StatelessWidget {
         //color: Color(0xFFF1F1F1),
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: NetworkImage(imageUrl),
+          image: CachedNetworkImageProvider(imageUrl),
         ),
       ),
       child: Padding(
@@ -78,13 +79,12 @@ class FeaturedCard extends StatelessWidget {
                       workoutContent: workoutContent,
                       userImage: userImg,
                       catId: catId,
-                      isUrl: true,
                     ),
                   ),
                 );
               },
               child: Text(
-                title,
+                title ?? '',
                 style: TextStyle(
                   color: Color(0xFF4CDA63),
                   fontSize: 27,

@@ -12,6 +12,7 @@ class CategoryModel {
   final Timestamp createdTime;
   final List<dynamic> videos;
   final bool isFeatured;
+  final List<dynamic> students;
 
   CategoryModel({
     this.ownerId,
@@ -23,6 +24,7 @@ class CategoryModel {
     this.createdTime,
     this.videos,
     this.isFeatured,
+    this.students,
   });
 
   Map<String, dynamic> toJson() => {
@@ -32,7 +34,12 @@ class CategoryModel {
         'subType': subType,
         'price': price,
         'createdTime': createdTime,
-    'isFeatured': isFeatured,
+        'isFeatured': isFeatured,
+      };
+
+  Map<String, dynamic> toJsonStu() => {
+        'students': students,
+        'title': title,
       };
 
   CategoryModel fromJson(Map<String, dynamic> data) => CategoryModel(
@@ -43,6 +50,7 @@ class CategoryModel {
         subType: data['subType'],
         createdTime: data['createdTime'],
         isFeatured: data['isFeatured'],
+        students: data['students'],
         catId: catId,
       );
 }
@@ -55,6 +63,7 @@ class Video {
   final String sec;
   final String catId;
   final String id;
+  final bool isPreview;
 
   Video({
     this.title,
@@ -64,6 +73,7 @@ class Video {
     this.sec,
     this.catId,
     this.id,
+    this.isPreview,
   });
 
   Map<String, dynamic> toJson() => {
@@ -73,7 +83,12 @@ class Video {
         'min': min,
         'sec': sec,
         'catId': catId,
+        'is-preview': isPreview,
       };
+
+  Map<String, dynamic> toJsonPreview() => {
+    'is-preview': isPreview,
+  };
 
   Video fromJson(Map<String, dynamic> data) => Video(
         sec: data['sec'],
@@ -83,6 +98,7 @@ class Video {
         title: data['title'],
         catId: data['catId'],
         id: id,
+        isPreview: data['is-preview'] ?? false,
       );
 }
 

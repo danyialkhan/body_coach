@@ -13,6 +13,7 @@ class UserProfile {
   final bool isAdmin;
   final String isoCode;
   final int gender;
+  final List<dynamic> myStudents;
 
   UserProfile({
     this.uId,
@@ -27,6 +28,7 @@ class UserProfile {
     this.isAdmin,
     this.isoCode,
     this.gender,
+    this.myStudents,
   });
 
   Map<String, dynamic> toJson() {
@@ -41,7 +43,8 @@ class UserProfile {
       'img': imgUrl,
       'dob': dob,
       'isoCode': isoCode,
-      'gender': gender
+      'gender': gender,
+      'my-students': myStudents,
     };
   }
 
@@ -58,7 +61,8 @@ class UserProfile {
       name: data['name'],
       isAdmin: data['isAdmin'],
       isoCode: data['isoCode'],
-      gender: data['gender']
+      gender: data['gender'],
+      myStudents: data['my-students']
     );
   }
 

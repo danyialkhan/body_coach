@@ -34,7 +34,7 @@ class CategoryList extends StatelessWidget {
                         builder: (ctx) =>
                             WorkOutView(
                               title: models[i].title,
-                              image: models[i].imgUrl,
+                              imageUrl: models[i].imgUrl,
                               catId: models[i].catId,
                               ownerId: models[i].ownerId,
                               userName: userName,

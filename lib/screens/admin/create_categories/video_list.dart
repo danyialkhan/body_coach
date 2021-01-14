@@ -70,6 +70,7 @@ class VideoList extends StatelessWidget {
                                         link: videos.videos[index].link,
                                         hr: videos.videos[index].hr,
                                         title: videos.videos[index].title,
+                                        isPreview: videos.videos[index].isPreview,
                                       ),
                                     ),
                                   ),

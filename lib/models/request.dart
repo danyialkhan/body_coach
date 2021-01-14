@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Subscribers {
+class Request {
   final String id;
   final String subId;
   final String subName;
@@ -12,7 +12,7 @@ class Subscribers {
   final String subCat;
   final int reqStatus;
 
-  Subscribers({
+  Request({
     this.id,
     this.subId,
     this.subName,
@@ -37,16 +37,27 @@ class Subscribers {
     'req-status': reqStatus,
   };
 
-  Subscribers fromJson(Map<String, dynamic> data) => Subscribers(
+  Map<String, dynamic> toJsonReq() => {
+    'req-status': reqStatus,
+  };
+
+  Request fromJson(Map<String, dynamic> data) => Request(
     id: id,
-    subId: data['subId'],
-    subName: data['subName'],
-    subscribedName: data['subscribedName'],
-    subscribedId: data['subscribedId'],
-    subImgUrl: data['subImg'],
-    subscribedImgUrl: data['subscribedImg'],
-    joinedTime: data['joined-time'],
-    subCat: data['sub-cat'],
-    reqStatus: data['req-status'],
+    subId: data['subId'] ?? null,
+    subName: data['subName'] ?? null,
+    subscribedName: data['subscribedName'] ?? null,
+    subscribedId: data['subscribedId'] ?? null,
+    subImgUrl: data['subImg'] ?? null,
+    subscribedImgUrl: data['subscribedImg'] ?? null,
+    joinedTime: data['joined-time'] ?? null,
+    subCat: data['sub-cat'] ?? null,
+    reqStatus: data['req-status'] ?? null,
   );
+}
+
+enum SubscriptionRequestStatus {
+  PENDING,
+  ACCEPTED,
+  DECLINE,
+  NOT_APPLIED,
 }

@@ -39,7 +39,75 @@ class CategoryService {
     }
   }
 
-  Future<List<Video>> getVideos() async {
+  Future<List<dynamic>> updateStudentToList({String sId}) async {
+    try {
+      CategoryModel model = await getCategory();
+
+      if (model?.students != null && model.students.isNotEmpty) {
+        model.students.add(sId);
+      } else {
+        model = CategoryModel(students: [sId], title: model.title);
+      }
+
+      _catRef.document(catId).updateData(model.toJsonStu());
+      return model?.students;
+    } catch (e) {
+      print('UPDATE STUDENT LIST ERR: $e');
+      return null;
+    }
+  }
+
+  Future setStudentToList({String sId}) async {
+    try {
+      CategoryModel model = await getCategory();
+
+      if (model != null) {
+        if (model.students != null || model.students.isNotEmpty) {
+          model.students.add(sId);
+        } else {
+          model = CategoryModel(students: [sId]);
+        }
+      }
+
+      _catRef.document(catId).setData(model.toJsonStu());
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<CategoryModel> getCategory() async {
+    try {
+      QuerySnapshot snapshot = await _catRef.getDocuments();
+
+      DocumentSnapshot documentSnapshot = snapshot.documents
+          .firstWhere((element) => element.documentID == catId);
+      if (documentSnapshot == null) return null;
+      return CategoryModel(catId: documentSnapshot.documentID)
+          .fromJson(documentSnapshot.data);
+    } catch (e) {
+      print('GET CAT ERROR: $e');
+      return null;
+    }
+  }
+
+  Future<List<Video>> getPreviewVideos() async {
+    try {
+      QuerySnapshot snapshot = await _catRef
+          .document(catId)
+          .collection('videos')
+          .where('is-preview', isEqualTo: true)
+          .getDocuments();
+
+      return snapshot.documents
+          .map((e) => Video(id: e.documentID).fromJson(e.data))
+          .toList();
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future<List<Video>> getAllVideos() async {
     try {
       QuerySnapshot snapshot =
           await _catRef.document(catId).collection('videos').getDocuments();
@@ -90,6 +158,7 @@ class CategoryService {
     String min,
     String sec,
     String link,
+    bool isPreview,
   }) async {
     try {
       await _catRef.document(catId).collection('videos').add(Video(
@@ -99,6 +168,7 @@ class CategoryService {
             link: link,
             min: min,
             sec: sec,
+            isPreview: isPreview,
           ).toJson());
     } catch (e) {
       print(e);
@@ -111,6 +181,7 @@ class CategoryService {
     String min,
     String sec,
     String link,
+    bool isPreview,
   }) async {
     try {
       await _catRef
@@ -124,6 +195,7 @@ class CategoryService {
             link: link,
             min: min,
             sec: sec,
+            isPreview: isPreview,
           ).toJson());
     } catch (e) {
       throw e;
@@ -144,7 +216,7 @@ class CategoryService {
     }
   }
 
-  Future addSubscriber({
+  Future<List<dynamic>> addSubscriber({
     String name,
     String subscribed,
     String subImg,
@@ -162,13 +234,29 @@ class CategoryService {
             subscribedId: catId,
             subImgUrl: subImg,
             subscribedImgUrl: subscribedImg,
+            joinedTime: Timestamp.now(),
           ).toJson());
+
+      return await updateStudentToList(sId: uId);
     } catch (e) {
-      print(e);
+      print('ADD SUB ERROR: $e');
+      return null;
     }
   }
 
   Future removeSubscriber() async {
+    CategoryModel model = await getCategory();
+
+    if (model != null) {
+      if (model.students != null) {
+        if (model.students.isNotEmpty) {
+          model.students.remove(uId);
+        }
+      }
+    }
+
+    await _catRef.document(catId).updateData(model.toJsonStu());
+
     try {
       await _catRef
           .document(catId)
@@ -182,7 +270,8 @@ class CategoryService {
 
   List<Subscribers> _getSubscribers(QuerySnapshot snapshot) {
     return snapshot.documents
-        .map((e) => Subscribers(id: e.documentID).fromJson(e.data)).toList();
+        .map((e) => Subscribers(id: e.documentID).fromJson(e.data))
+        .toList();
   }
 
   Stream<List<Subscribers>> getSubscribers() {
@@ -194,7 +283,6 @@ class CategoryService {
   }
 
   List<CategoryModel> _modelsFromSnapshot(QuerySnapshot snapshot) {
-    print(snapshot.documents.length);
     return snapshot.documents
         .map((e) => CategoryModel(catId: e.documentID).fromJson(e.data))
         .toList();
@@ -207,10 +295,19 @@ class CategoryService {
         .map(_modelsFromSnapshot);
   }
 
+  int _getCount(DocumentSnapshot snapshot) {
+    return CategoryModel(
+          students: snapshot.data['students'],
+        ).students?.length ??
+        0;
+  }
+
+  Stream<int> studentCount() {
+    return _catRef.document(catId).snapshots().map(_getCount);
+  }
+
   Stream<List<CategoryModel>> allCategoriesStream() {
-    return _catRef
-        .snapshots()
-        .map(_modelsFromSnapshot);
+    return _catRef.snapshots().map(_modelsFromSnapshot);
   }
 
   Stream<List<CategoryModel>> featuredCategoriesStream() {
@@ -218,5 +315,27 @@ class CategoryService {
         .where('isFeatured', isEqualTo: true)
         .snapshots()
         .map(_modelsFromSnapshot);
+  }
+
+  List<Video> _videosFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents
+        .map((e) => Video(id: e.documentID).fromJson(e.data)).toList();
+  }
+
+  Stream<List<Video>> previewVideosStream() {
+    return _catRef
+        .document(catId)
+        .collection('videos')
+        .where('is-preview', isEqualTo: true)
+        .snapshots()
+        .map(_videosFromSnapshot);
+  }
+
+  Stream<List<Video>> allVideosStream() {
+    return _catRef
+        .document(catId)
+        .collection('videos')
+        .snapshots()
+        .map(_videosFromSnapshot);
   }
 }

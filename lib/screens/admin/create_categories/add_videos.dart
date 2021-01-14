@@ -1,4 +1,5 @@
 import 'package:body_coach/models/category_model.dart';
+import 'package:body_coach/screens/admin/all_categories/components/is_preview_check_box.dart';
 import 'package:body_coach/services/category_service.dart';
 import 'package:body_coach/shared/constants.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,8 @@ class AddVideoLink extends StatefulWidget {
   final String link;
   final String title;
   final String vidId;
+  final bool isPreview;
+
   AddVideoLink(
       {this.uId,
       this.catId,
@@ -28,7 +31,8 @@ class AddVideoLink extends StatefulWidget {
       this.sec,
       this.vidId,
       this.addToCollection = false,
-      this.updateVideo = false});
+      this.updateVideo = false,
+      this.isPreview = false});
 
   @override
   _AddVideoLinkState createState() => _AddVideoLinkState();
@@ -46,6 +50,7 @@ class _AddVideoLinkState extends State<AddVideoLink> {
   String _min;
   String _sec;
   bool _isLoading = false;
+  bool _isPreview;
   @override
   void initState() {
     if (widget.updateVideo) {
@@ -125,6 +130,16 @@ class _AddVideoLinkState extends State<AddVideoLink> {
                 _sec = val;
               },
             ),
+
+            IsPreviewChkBox(
+              value: _isPreview ?? widget.isPreview ?? false,
+              onChanged: (value) {
+                  setState(() {
+                    _isPreview = value;
+                  });
+              },
+            ),
+
             _isLoading
                 ? Center(
                     child: CircularProgressIndicator(
@@ -155,12 +170,13 @@ class _AddVideoLinkState extends State<AddVideoLink> {
                                 link: _videoLink,
                                 min: _min,
                                 sec: _sec,
+                                isPreview: _isPreview ?? widget.isPreview ?? false,
                               );
                               if (!widget.updateVideo) {
                                 video.setVideo(vid);
                               }
 
-                              try{
+                              try {
                                 if (widget.addToCollection) {
                                   _toggleIsLoading();
                                   await CategoryService(
@@ -171,6 +187,7 @@ class _AddVideoLinkState extends State<AddVideoLink> {
                                     link: _videoLink,
                                     min: _min,
                                     sec: _sec,
+                                    isPreview: _isPreview ?? widget.isPreview,
                                   );
                                   _toggleIsLoading();
                                 }
@@ -186,6 +203,7 @@ class _AddVideoLinkState extends State<AddVideoLink> {
                                     link: _videoLink,
                                     min: _min,
                                     sec: _sec,
+                                    isPreview: _isPreview ?? widget.isPreview,
                                   );
                                   var videos = video.videos;
                                   videos.removeWhere(
@@ -195,7 +213,7 @@ class _AddVideoLinkState extends State<AddVideoLink> {
                                   _toggleIsLoading();
                                   Navigator.of(context).pop();
                                 }
-                              }catch(e){
+                              } catch (e) {
                                 _toggleIsLoading();
                                 print(e);
                               }

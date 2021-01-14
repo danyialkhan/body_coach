@@ -1,11 +1,13 @@
 import 'package:body_coach/models/category_model.dart';
 import 'package:body_coach/models/data/course.dart';
 import 'package:body_coach/models/data/fitness_app_data.dart';
+import 'package:body_coach/models/request.dart';
 import 'package:body_coach/models/user.dart';
 import 'package:body_coach/screens/home/youtube_player.dart';
 import 'package:body_coach/services/category_service.dart';
-import 'package:body_coach/services/user_service.dart';
+import 'package:body_coach/services/request_service.dart';
 import 'package:body_coach/shared/constants.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,49 +23,34 @@ class WorkOutView extends StatefulWidget {
   final String imageUrl;
   final String totalSubscription;
   final String image;
-  final bool isUrl;
   final String catId;
   final String userName;
   final String ownerId;
   final String userImage;
-  WorkOutView(
-      {this.data,
-      this.courseContent,
-      this.totalSubscription,
-      this.stars,
-      this.title,
-      this.level,
-      this.imageUrl,
-      this.equipment,
-      this.duration,
-      this.image,
-      this.workoutContent,
-      this.catId,
-      this.userName,
-      this.ownerId,
-      this.userImage,
-      this.isUrl = false});
+  WorkOutView({
+    this.data,
+    this.courseContent,
+    this.totalSubscription,
+    this.stars,
+    this.title,
+    this.level,
+    this.imageUrl,
+    this.equipment,
+    this.duration,
+    this.image,
+    this.workoutContent,
+    this.catId,
+    this.userName,
+    this.ownerId,
+    this.userImage,
+  });
 
   @override
   _WorkOutViewState createState() => _WorkOutViewState();
 }
 
 class _WorkOutViewState extends State<WorkOutView> {
-  List<Video> videos = [];
-  bool _isLoading = false;
   bool _fetchingSubscription = false;
-
-  @override
-  void initState() {
-    _getVideos();
-    super.initState();
-  }
-
-  _toggleIsLoading() {
-    setState(() {
-      _isLoading = !_isLoading;
-    });
-  }
 
   _toggleSubscription() {
     setState(() {
@@ -71,24 +58,27 @@ class _WorkOutViewState extends State<WorkOutView> {
     });
   }
 
-  _getVideos() async {
-    _toggleIsLoading();
-    videos = await CategoryService(catId: widget.catId).getVideos();
-    _toggleIsLoading();
+  String _getTextString(int num) {
+    if(num < 10){
+      return '0${num + 1}';
+    }else{
+      return '${num + 1}';
+    }
   }
 
-  Widget _courseContentList(index) {
+  Widget _courseContentList(Video video, int index) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text(
-            "0" + (1 + index).toString(),
+            _getTextString(index),
             style: TextStyle(
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFFE4E7F4)),
+              fontSize: 40.0,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFFE4E7F4),
+            ),
           ),
           Expanded(
             child: Container(
@@ -97,36 +87,43 @@ class _WorkOutViewState extends State<WorkOutView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    '${videos[index].hr}hr : ${videos[index].min}min : ${videos[index].sec}sec',
+                    '${video.hr}hr : ${video.min}min : ${video.sec}sec',
                     style: TextStyle(
-                        color: Color(0xFFA0A5BD),
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w500),
+                      color: Color(0xFFA0A5BD),
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   SizedBox(
                     height: 5.0,
                   ),
                   Text(
-                    videos[index].title,
-                    style:
-                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                  )
+                    video.title,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
           GestureDetector(
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
                 builder: (ctx) => YoutubeVideoPlayer(
-                      videoLink: videos[index].link,
-                      title: videos[index].title,
-                    ))),
+                  videoLink: video.link,
+                  title: video.title,
+                ),
+              ),
+            ),
             child: Container(
               height: 40.0,
               width: 40.0,
               decoration: BoxDecoration(
-                  color: Color(0xFF49CC96),
-                  borderRadius: BorderRadius.circular(20.0)),
+                color: Color(0xFF49CC96),
+                borderRadius: BorderRadius.circular(20.0),
+              ),
               child: Icon(
                 Icons.play_arrow,
                 color: Colors.white,
@@ -136,6 +133,36 @@ class _WorkOutViewState extends State<WorkOutView> {
         ],
       ),
     );
+  }
+
+  String _getButtonStatus(int status) {
+    switch (status) {
+      case 0:
+        return "REQUEST PENDING";
+      case 1:
+        return "SUBSCRIBED";
+      case 2:
+        return "REJECTED";
+      case 3:
+        return "SUBSCRIBE";
+      default:
+        return "ERROR";
+    }
+  }
+
+  Color _getButtonColor(int status) {
+    switch (status) {
+      case 0:
+        return Colors.lime;
+      case 1:
+        return Colors.greenAccent;
+      case 2:
+        return Colors.redAccent;
+      case 3:
+        return Color(0xFF6E8AFA);
+      default:
+        return Colors.redAccent;
+    }
   }
 
   @override
@@ -155,106 +182,91 @@ class _WorkOutViewState extends State<WorkOutView> {
                 height: 60.0,
                 width: 70.0,
                 decoration: BoxDecoration(
-                    color: Color(0xFFFFEDEE),
-                    borderRadius: BorderRadius.circular(30.0)),
+                  color: Color(0xFFFFEDEE),
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
                 child: Icon(
                   Icons.favorite_border,
                   color: Color(0xFFFF6670),
                 ),
               ),
               SizedBox(width: 10.0),
-              StreamBuilder<bool>(
-                stream: UserService(uId: user.uId)
-                    .checkSubscribed(catId: widget.catId),
-                builder: (ctx, snapshot) {
-                  if (snapshot.hasData) {
-                    return GestureDetector(
-                      onTap: () async {
-                        if (!snapshot.data) {
-                          await CategoryService(
-                                  uId: user.uId, catId: widget.catId)
-                              .addSubscriber(
-                            name: widget.userName,
-                            subscribed: widget.title,
-                          );
-                          await UserService(uId: widget.ownerId)
-                              .addUserSubscriptions(
-                            id: user.uId,
-                            name: widget.userName,
-                            subscribed: widget.title,
-                            subImg: widget.userImage,
-                            subscribedImg: widget.image,
-                          );
-                          await UserService(uId: user.uId)
-                              .addSubscribedCategory(
-                            id: widget.catId,
-                            name: widget.title,
-                            subscribed: widget.userName,
-                            subImg: widget.userImage,
-                            subscribedImg: widget.image,
-                          );
-                        } else {
-                          await CategoryService(
-                                  uId: user.uId, catId: widget.catId)
-                              .removeSubscriber();
-                          await UserService(uId: user.uId)
-                              .removeSubscribedCategory(
-                            id: widget.catId,
-                          );
-                          await UserService(uId: widget.ownerId)
-                              .removeUserSubscriptions(
-                            id: user.uId,
-                          );
-                        }
-                      },
-                      child: Container(
-                        height: 60.0,
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        decoration: BoxDecoration(
-                          color: Color(0xFF6E8AFA),
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        child: Center(
-                          child: Text(
-                            !snapshot.data ? "Subscribe" : 'UnSubscribe',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  } else {
-                    return Center(
+              _fetchingSubscription
+                  ? Center(
                       child: CircularProgressIndicator(
                         backgroundColor: purpleShad,
                       ),
-                    );
-                  }
-                },
-              ),
+                    )
+                  : StreamBuilder<Request>(
+                      stream: RequestService(
+                        catId: widget.catId,
+                        reqId: user.uId,
+                      ).requestStatusStream(),
+                      builder: (ctx, snapshot) {
+                        if (snapshot.hasData) {
+                          Request request = snapshot.data;
+                          return GestureDetector(
+                            onTap: request.reqStatus < 3
+                                ? null
+                                : () async {
+                                    if (request.reqStatus == 3) {
+                                      _toggleSubscription();
+                                      await RequestService(
+                                        sender: user.uId,
+                                        receiver: widget.ownerId,
+                                        reqId: user.uId,
+                                        catId: widget.catId,
+                                      ).createRequest(
+                                        name: widget.userName,
+                                        senderImg: widget.userImage,
+                                        trainerImg: widget.imageUrl,
+                                        trainer: widget.title,
+                                      );
+                                      _toggleSubscription();
+                                    }
+                                  },
+                            child: Container(
+                              height: 60.0,
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              decoration: BoxDecoration(
+                                color: Color(0xFF6E8AFA),
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  _getButtonStatus(request.reqStatus ?? 3),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              backgroundColor: purpleShad,
+                            ),
+                          );
+                        }
+                      },
+                    ),
             ],
           ),
         ),
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.black38,
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
             },
             icon: Icon(
               Icons.arrow_back_ios,
-              color: widget.isUrl ? Colors.white : Colors.black,
+              color: Colors.black,
             ),
           ),
-          // actions: <Widget>[
-          //   IconButton(
-          //     onPressed: () {},
-          //     icon: Icon(Icons.more_vert),
-          //   )
-          // ],
           elevation: 0,
         ),
         body: Column(
@@ -270,7 +282,9 @@ class _WorkOutViewState extends State<WorkOutView> {
                       fit: BoxFit.cover,
                       width: MediaQuery.of(context).size.width,
                       height: 400.0,
-                      image: NetworkImage(widget.image),
+                      image: widget.imageUrl == null
+                          ? AssetImage('assets/icons/BodyCo_Logo2_Charcoal.png')
+                          : CachedNetworkImageProvider(widget?.imageUrl),
                     ),
                   ),
                   Positioned(
@@ -281,13 +295,6 @@ class _WorkOutViewState extends State<WorkOutView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          // Image(
-                          //   width: 100.0,
-                          //   image: AssetImage("assets/course/bestseller.png"),
-                          // ),
-                          // SizedBox(
-                          //   height: 10.0,
-                          // ),
                           Text(
                             widget.title,
                             style: TextStyle(
@@ -297,57 +304,6 @@ class _WorkOutViewState extends State<WorkOutView> {
                             ),
                           ),
                           SizedBox(height: 10.0),
-                          // Row(
-                          //   children: <Widget>[
-                          //     Row(
-                          //       children: <Widget>[
-                          //         Icon(
-                          //           Icons.people,
-                          //           color: widget.isUrl
-                          //               ? Colors.white
-                          //               : Color(0xFF61688B),
-                          //         ),
-                          //         // SizedBox(width: 5.0),
-                          //         // Text(
-                          //         //   widget.totalSubscription + "k",
-                          //         //   style: TextStyle(
-                          //         //       fontWeight: FontWeight.bold,
-                          //         //       color: widget.isUrl
-                          //         //           ? Colors.white
-                          //         //           : Color(0xFF61688B)),
-                          //         // )
-                          //       ],
-                          //     ),
-                          //     SizedBox(width: 10.0),
-                          //     Row(
-                          //       children: <Widget>[
-                          //         Icon(
-                          //           Icons.star,
-                          //           color: widget.isUrl
-                          //               ? Colors.white
-                          //               : Color(0xFF61688B),
-                          //         ),
-                          //         SizedBox(width: 5.0),
-                          //         // Text(
-                          //         //   widget.stars + "k",
-                          //         //   style: TextStyle(
-                          //         //       fontWeight: FontWeight.bold,
-                          //         //       color: widget.isUrl
-                          //         //           ? Colors.white
-                          //         //           : Color(0xFF61688B)),
-                          //         // )
-                          //       ],
-                          //     ),
-                          //   ],
-                          // ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-//                          Text(
-//                            "\$" + data.price,
-//                            style: TextStyle(
-//                                fontSize: 25.0, fontWeight: FontWeight.bold),
-//                          )
                         ],
                       ),
                     ),
@@ -365,43 +321,81 @@ class _WorkOutViewState extends State<WorkOutView> {
                       height: MediaQuery.of(context).size.height - 400,
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(50.0),
-                              topRight: Radius.circular(50.0))),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(
-                                top: 40.0,
-                                right: 20.0,
-                                bottom: 20.0,
-                                left: 20.0),
-                            child: Text(
-                              "Workout Videos",
-                              style: TextStyle(
-                                  fontSize: 21.0, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          _isLoading
-                              ? Center(
-                                  child: CircularProgressIndicator(
-                                    backgroundColor: purpleShad,
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(50.0),
+                          topRight: Radius.circular(50.0),
+                        ),
+                      ),
+                      child: StreamBuilder<Request>(
+                        stream: RequestService(
+                          catId: widget.catId,
+                          reqId: user.uId,
+                        ).requestStatusStream(),
+                        builder: (ctx, reqSnapshot) {
+                          if(reqSnapshot.hasData) {
+                            Request req = reqSnapshot.data;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 40.0,
+                                      right: 20.0,
+                                      bottom: 20.0,
+                                      left: 20.0),
+                                  child: Text(
+                                    "Workout Videos",
+                                    style: TextStyle(
+                                      fontSize: 21.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                )
-                              : Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(bottom: 100.0),
-                                    child: ListView.builder(
-                                        itemCount: videos.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return _courseContentList(index);
-                                        }),
-                                  ),
-                                )
-                        ],
+                                ),
+                                StreamBuilder<List<Video>>(
+                                  stream: (req?.reqStatus ?? 0) == 1
+                                      ? CategoryService(catId: widget.catId)
+                                      .allVideosStream()
+                                      : CategoryService(catId: widget.catId)
+                                      .previewVideosStream(),
+                                  builder: (ctx, snapshot) {
+                                    if (snapshot.hasData) {
+                                      List<Video> videos = snapshot.data;
+                                      return Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              bottom: 100.0),
+                                          child: ListView.builder(
+                                            itemCount: videos?.length ?? 0,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return _courseContentList(
+                                                videos[index],
+                                                index,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          backgroundColor: purpleShad,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
+                            );
+                          }else{
+                            return Center(
+                              child: CircularProgressIndicator(
+                                backgroundColor: purpleShad,
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                   )

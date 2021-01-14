@@ -104,7 +104,7 @@ class AllCategories extends StatelessWidget {
                               List<Video> videos = await CategoryService(
                                 uId: user.uId,
                                 catId: models[index].catId,
-                              ).getVideos();
+                              ).getPreviewVideos();
                               print('LENGTH: ${videos.length}');
                               vid.setVideoList(videos);
                               Navigator.of(context).push(

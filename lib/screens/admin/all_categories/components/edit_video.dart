@@ -10,6 +10,7 @@ class EditVideo extends StatelessWidget {
   final String link;
   final String title;
   final String vidId;
+  final bool isPreview;
 
   EditVideo(
       {this.vidId,
@@ -19,7 +20,8 @@ class EditVideo extends StatelessWidget {
       this.hr,
       this.title,
       this.uId,
-      this.catId});
+      this.catId,
+      this.isPreview});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,6 +38,7 @@ class EditVideo extends StatelessWidget {
         sec: sec,
         vidId: vidId,
         updateVideo: true,
+        isPreview: isPreview,
       ),
     );
   }
