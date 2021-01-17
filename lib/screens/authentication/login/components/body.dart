@@ -6,6 +6,7 @@ import 'package:body_coach/shared/rounded_button.dart';
 import 'package:body_coach/shared/rounded_input_field.dart';
 import 'package:body_coach/shared/rounded_password_field.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Body extends StatefulWidget {
   @override
@@ -79,6 +80,7 @@ class _BodyState extends State<Body> {
                           _toggleIsLoading();
                         } catch (e) {
                           _toggleIsLoading();
+                          Fluttertoast.showToast(msg: "Invalid email or password", backgroundColor: Colors.redAccent);
                           print(e);
                         }
                       }

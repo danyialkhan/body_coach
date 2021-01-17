@@ -125,15 +125,15 @@ class _BodyState extends State<Body> {
               },
             ),
             OrDivider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SocalIcon(
-                  iconSrc: pGoogleSvg,
-                  press: () {},
-                ),
-              ],
-            )
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: <Widget>[
+            //     SocalIcon(
+            //       iconSrc: pGoogleSvg,
+            //       press: () {},
+            //     ),
+            //   ],
+            // )
           ],
         ),
       ),
