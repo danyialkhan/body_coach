@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:body_coach/models/category_model.dart';
 import 'package:body_coach/models/user.dart';
+import 'package:body_coach/screens/admin/create_categories/components/description_field.dart';
 import 'package:body_coach/screens/admin/create_categories/components/isFeaturedButton.dart';
 import 'package:body_coach/screens/admin/create_categories/video_list.dart';
 import 'package:body_coach/services/category_service.dart';
@@ -31,6 +32,7 @@ class _AddCategoryState extends State<AddCategory> {
   final picker = ImagePicker();
   String _selectionSubscription;
   String _selectionFeatured;
+  String _description;
   bool _featured;
   bool _isRun = false;
   List<String> _subscription = [
@@ -101,14 +103,27 @@ class _AddCategoryState extends State<AddCategory> {
                   height: 10.0,
                 ),
                 CatField(
-                  title: 'Category Name ',
-                  hint: 'Name',
+                  title: 'Title ',
+                  hint: 'title',
                   onSaved: (val) {
                     _title = val;
                   },
                   onValidate: (val) {
                     if (val == null || val.isEmpty) {
                       return 'Please Enter a valid title..';
+                    }
+                    return null;
+                  },
+                ),
+                DescriptionField(
+                  title: 'Description ',
+                  hint: 'description...',
+                  onSaved: (val) {
+                    _description = val;
+                  },
+                  onValidate: (val) {
+                    if (val == null || val.isEmpty) {
+                      return 'Please Enter a valid description..';
                     }
                     return null;
                   },
@@ -198,6 +213,7 @@ class _AddCategoryState extends State<AddCategory> {
                                   type: _type,
                                   imgUrl: url,
                                   featured: _featured,
+                                  desc: _description,
                                 );
                                 var allVideos = Provider.of<AllVideos>(context,
                                     listen: false);

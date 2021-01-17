@@ -22,6 +22,7 @@ class CategoryService {
     String ownerId,
     String imgUrl,
     bool featured,
+    String desc,
   }) async {
     try {
       DocumentReference doc = await _catRef.add(CategoryModel(
@@ -31,6 +32,7 @@ class CategoryService {
         title: title,
         imgUrl: imgUrl,
         isFeatured: featured,
+        description: desc,
         createdTime: Timestamp.now(),
       ).toJson());
       return doc.documentID;
@@ -136,6 +138,8 @@ class CategoryService {
     String ownerId,
     String imgUrl,
     bool featured,
+    String desc,
+    Timestamp creationTIme,
   }) async {
     try {
       await _catRef.document(catId).updateData(CategoryModel(
@@ -145,7 +149,8 @@ class CategoryService {
             title: title,
             imgUrl: imgUrl,
             isFeatured: featured,
-            createdTime: Timestamp.now(),
+            description: desc,
+            createdTime: creationTIme,
           ).toJson());
     } catch (e) {
       throw e;
@@ -306,20 +311,34 @@ class CategoryService {
     return _catRef.document(catId).snapshots().map(_getCount);
   }
 
-  Stream<List<CategoryModel>> allCategoriesStream() {
-    return _catRef.snapshots().map(_modelsFromSnapshot);
+  Stream<List<CategoryModel>> topFiveCategoriesStream() {
+    return _catRef.limit(5).snapshots().map(_modelsFromSnapshot);
   }
 
-  Stream<List<CategoryModel>> featuredCategoriesStream() {
+  Stream<List<CategoryModel>> allCategoriesStream() {
+    return _catRef.limit(5).snapshots().map(_modelsFromSnapshot);
+  }
+
+  Stream<List<CategoryModel>> topFiveFeaturedCategoriesStream() {
     return _catRef
         .where('isFeatured', isEqualTo: true)
+        .limit(5)
+        .snapshots()
+        .map(_modelsFromSnapshot);
+  }
+
+  Stream<List<CategoryModel>> allFeaturedCategoriesStream() {
+    return _catRef
+        .where('isFeatured', isEqualTo: true)
+        .limit(5)
         .snapshots()
         .map(_modelsFromSnapshot);
   }
 
   List<Video> _videosFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents
-        .map((e) => Video(id: e.documentID).fromJson(e.data)).toList();
+        .map((e) => Video(id: e.documentID).fromJson(e.data))
+        .toList();
   }
 
   Stream<List<Video>> previewVideosStream() {

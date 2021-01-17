@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:body_coach/models/user.dart';
 import 'package:body_coach/screens/admin/create_categories/add_videos.dart';
 import 'package:body_coach/screens/admin/create_categories/components/cat_fielt.dart';
+import 'package:body_coach/screens/admin/create_categories/components/description_field.dart';
 import 'package:body_coach/screens/admin/create_categories/components/image_selector.dart';
 import 'package:body_coach/screens/admin/create_categories/components/isFeaturedButton.dart';
 import 'package:body_coach/screens/admin/create_categories/components/price_field.dart';
@@ -10,6 +11,7 @@ import 'package:body_coach/screens/admin/create_categories/video_list.dart';
 import 'package:body_coach/services/category_service.dart';
 import 'package:body_coach/shared/constants.dart';
 import 'package:body_coach/shared/image_functions.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +23,8 @@ class EditCategory extends StatefulWidget {
   final String currentPrice;
   final String imgLink;
   final bool featured;
+  final String description;
+  final Timestamp creationTime;
 
   EditCategory({
     this.currentPrice,
@@ -29,6 +33,8 @@ class EditCategory extends StatefulWidget {
     this.imgLink,
     this.catId,
     this.featured,
+    this.description,
+    this.creationTime,
   });
 
   @override
@@ -38,12 +44,14 @@ class EditCategory extends StatefulWidget {
 class _EditCategoryState extends State<EditCategory> {
   final nameController = TextEditingController();
   final priceController = TextEditingController();
+  final descController = TextEditingController();
   bool _isLoading = false;
   bool _isLink = true;
   File _image;
   String _title;
   int _type;
   String _price;
+  String _description;
   final picker = ImagePicker();
   String _selectionSubscription;
   String _selectionFeatured;
@@ -62,6 +70,7 @@ class _EditCategoryState extends State<EditCategory> {
   void initState() {
     nameController.text = widget.currentTitle;
     priceController.text = widget.currentPrice;
+    descController.text = widget.description;
     if (widget.currentSub == 0) {
       _type = 0;
       _showPrice = true;
@@ -72,10 +81,9 @@ class _EditCategoryState extends State<EditCategory> {
       _selectionSubscription = 'Unpaid';
     }
 
-    if(widget?.featured != null && (widget?.featured ?? false)){
+    if (widget?.featured != null && (widget?.featured ?? false)) {
       _selectionFeatured = 'Yes';
-    }
-    else{
+    } else {
       _selectionFeatured = 'No';
     }
 
@@ -96,6 +104,7 @@ class _EditCategoryState extends State<EditCategory> {
   }
 
   _toggleIsLoading() {
+    if(!mounted) return;
     setState(() {
       _isLoading = !_isLoading;
     });
@@ -132,8 +141,8 @@ class _EditCategoryState extends State<EditCategory> {
                     height: 10.0,
                   ),
                   CatField(
-                    title: 'Category Name ',
-                    hint: 'Name',
+                    title: 'Title ',
+                    hint: 'title',
                     onSaved: (val) {
                       _title = val;
                     },
@@ -141,6 +150,20 @@ class _EditCategoryState extends State<EditCategory> {
                     onValidate: (val) {
                       if (val == null || val.isEmpty) {
                         return 'Please Enter a valid title..';
+                      }
+                      return null;
+                    },
+                  ),
+                  DescriptionField(
+                    title: 'Description ',
+                    hint: 'description...',
+                    onSaved: (val) {
+                      _description = val;
+                    },
+                    controller: descController,
+                    onValidate: (val) {
+                      if (val == null || val.isEmpty) {
+                        return 'Please Enter a valid description..';
                       }
                       return null;
                     },
@@ -173,7 +196,7 @@ class _EditCategoryState extends State<EditCategory> {
                   IsFeaturedButton(
                     onChanged: (val) {
                       setState(
-                            () {
+                        () {
                           _selectionFeatured = val;
                           switch (val) {
                             case 'Yes':
@@ -241,6 +264,8 @@ class _EditCategoryState extends State<EditCategory> {
                                   type: _type,
                                   imgUrl: url ?? widget.imgLink,
                                   featured: _featured,
+                                  desc: _description,
+                                  creationTIme: widget.creationTime,
                                 );
                                 _toggleIsLoading();
                               }

@@ -19,6 +19,7 @@ class _AllReqTabBarState extends State<AllReqTabBar> {
   bool _isLoading = false;
 
   _toggleSubscription() {
+    if(!mounted) return;
     setState(() {
       _isLoading = !_isLoading;
     });

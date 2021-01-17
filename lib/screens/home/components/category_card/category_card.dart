@@ -1,5 +1,4 @@
 import 'package:body_coach/models/category_model.dart';
-import 'package:body_coach/shared/constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -26,22 +25,21 @@ class CategoryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              course?.title ?? '',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.greenAccent,
+            Container(
+              padding: EdgeInsets.all(2.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5.0),
+                color: Colors.black38
+              ),
+              child: Text(
+                course?.title ?? '',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ),
-            SizedBox(
-              height: 5.0,
-            ),
-            Text(
-              "5 Courses",
-              style: TextStyle(
-                  color: kPrimaryLightColor, fontWeight: FontWeight.w600),
-            )
           ],
         ),
       ),

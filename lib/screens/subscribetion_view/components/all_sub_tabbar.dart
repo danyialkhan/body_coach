@@ -47,10 +47,11 @@ class AllSubTabBar extends StatelessWidget {
                                   backgroundImage: userProfile?.imgUrl == null
                                       ? AssetImage('assets/user.png')
                                       : CachedNetworkImageProvider(
-                                    subscribers[index].subImgUrl,
+                                    subscribers[index]?.subImgUrl ?? '',
                                   ),
                                 ),
                                 title: Text('${userProfile?.name ?? 'User'}'),
+                                subtitle: Text('${userProfile?.mobileNumber ?? '01xxxx'}'),
                               ),
                             ),
                           );

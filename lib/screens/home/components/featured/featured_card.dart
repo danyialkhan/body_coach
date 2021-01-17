@@ -17,6 +17,7 @@ class FeaturedCard extends StatelessWidget {
   final String userName;
   final String ownerId;
   final String userImg;
+  final String desc;
 
   FeaturedCard(
       {this.title,
@@ -31,6 +32,7 @@ class FeaturedCard extends StatelessWidget {
       this.userName,
       this.ownerId,
       this.userImg,
+        this.desc,
       this.catId});
 
   @override
@@ -79,16 +81,24 @@ class FeaturedCard extends StatelessWidget {
                       workoutContent: workoutContent,
                       userImage: userImg,
                       catId: catId,
+                      desc: desc,
                     ),
                   ),
                 );
               },
-              child: Text(
-                title ?? '',
-                style: TextStyle(
-                  color: Color(0xFF4CDA63),
-                  fontSize: 27,
-                  fontWeight: FontWeight.w700,
+              child: Container(
+                padding: EdgeInsets.all(2.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5.0),
+                    color: Colors.black38
+                ),
+                child: Text(
+                  title ?? '',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),

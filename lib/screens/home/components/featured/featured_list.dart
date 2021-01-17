@@ -15,7 +15,7 @@ class FeaturedList extends StatelessWidget {
     var mq = MediaQuery.of(context).size;
     var user = Provider.of<User>(context);
     return StreamBuilder<List<CategoryModel>>(
-      stream: CategoryService(uId: user.uId).featuredCategoriesStream(),
+      stream: CategoryService(uId: user.uId).topFiveFeaturedCategoriesStream(),
       builder: (ctx, snapshot){
         if(snapshot.hasData) {
           var models = snapshot.data;
@@ -45,6 +45,7 @@ class FeaturedList extends StatelessWidget {
                         catId: models[i].catId ?? '',
                         userName: userName ?? '',
                         userImg: usrImg ?? '',
+                        desc: models[i].description,
                         // level: 'medium',
                         // students: '20k',
                         // star: '5k',

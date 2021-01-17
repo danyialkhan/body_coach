@@ -101,9 +101,7 @@ class UserService {
     String subscribedImg,
     String catId,
   }) async {
-    try {
-      
-    } catch (e) {
+    try {} catch (e) {
       print('SEND REQ ERR: $e');
     }
   }
@@ -271,6 +269,29 @@ class UserService {
 
   Stream<UserProfile> getUserStream() {
     if (_usersRef == null) return null;
-    return this._usersRef.document(uId).snapshots().map(_getDocumentStream);
+    return _usersRef.document(uId).snapshots().map(_getDocumentStream);
+  }
+
+  List<Subscribers> _librariesFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents
+        .map((e) => Subscribers().fromJson(e.data))
+        .toList();
+  }
+
+  Stream<List<Subscribers>> userLibraryStream() {
+    return _usersRef
+        .document(uId)
+        .collection('my_courses')
+        .limit(5)
+        .snapshots()
+        .map(_librariesFromSnapshot);
+  }
+
+  Stream<List<Subscribers>> userAllLibraryStream() {
+    return _usersRef
+        .document(uId)
+        .collection('my_courses')
+        .snapshots()
+        .map(_librariesFromSnapshot);
   }
 }

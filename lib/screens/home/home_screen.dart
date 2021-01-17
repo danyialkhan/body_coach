@@ -1,7 +1,11 @@
 import 'package:body_coach/models/user.dart';
 import 'package:body_coach/models/user_profile.dart';
 import 'package:body_coach/screens/home/components/category_card/category_list.dart';
+import 'package:body_coach/screens/home/components/category_card/see_all_cat.dart';
 import 'package:body_coach/screens/home/components/featured/featured_list.dart';
+import 'package:body_coach/screens/home/components/featured/see_all_fet.dart';
+import 'package:body_coach/screens/home/components/my_library/my_library_list.dart';
+import 'package:body_coach/screens/home/components/my_library/see_all_lib.dart';
 import 'package:body_coach/screens/home/components/title_see_all_strap.dart';
 import 'package:body_coach/services/user_service.dart';
 import 'package:body_coach/shared/constants.dart';
@@ -69,73 +73,107 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
-          child: _isLoading ?
-              Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: purpleShad,
-                ),
-              )
+          child: _isLoading
+              ? Center(
+                  child: CircularProgressIndicator(
+                    backgroundColor: purpleShad,
+                  ),
+                )
               : Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 20.0),
-              Text(
-                _isLoading ? "Hey ...," : 'Hey ${_userProfile.name}',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28.0),
-              ),
-              SizedBox(height: 15.0),
-              Text(
-                kHomeDescription,
-                style: TextStyle(fontSize: 22.0, color: purpleShad),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 35.0),
-                padding: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 15.0),
-                height: 60.0,
-                decoration: BoxDecoration(
-                    color: whiteShad,
-                    borderRadius: BorderRadius.circular(30.0)),
-                child: Row(
-                  children: <Widget>[
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.search,
-                        size: 30.0,
-                      ),
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20.0),
+                    Text(
+                      _isLoading ? "Hey ...," : 'Hey ${_userProfile.name}',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 28.0),
+                    ),
+                    SizedBox(height: 15.0),
+                    Text(
+                      kHomeDescription,
+                      style: TextStyle(fontSize: 22.0, color: purpleShad),
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 5.0),
-                      width: MediaQuery.of(context).size.width - 110,
-                      child: TextField(
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: kSearch,
-                            hintStyle: TextStyle(fontSize: 18.0)),
+                      margin: EdgeInsets.only(top: 35.0),
+                      padding:
+                          EdgeInsets.only(top: 10.0, bottom: 10.0, left: 15.0),
+                      height: 60.0,
+                      decoration: BoxDecoration(
+                          color: whiteShad,
+                          borderRadius: BorderRadius.circular(30.0)),
+                      child: Row(
+                        children: <Widget>[
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.search,
+                              size: 30.0,
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 5.0),
+                            width: MediaQuery.of(context).size.width - 110,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: kSearch,
+                                  hintStyle: TextStyle(fontSize: 18.0)),
+                            ),
+                          )
+                        ],
                       ),
-                    )
+                    ),
+                    SeeAll(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (ctx) => SeeAllLib(
+                              title: kMyLib,
+                            ),
+                          ),
+                        );
+                      },
+                      title: kMyLib,
+                    ),
+                    MyLibraryList(
+                      userName: _userProfile.name,
+                      imgUrl: _userProfile.imgUrl,
+                    ),
+                    SeeAll(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (ctx) => SeeAllCat(
+                              title: kCat,
+                            ),
+                          ),
+                        );
+                      },
+                      title: kCat,
+                    ),
+                    CategoryList(
+                      userName: _userProfile.name,
+                      imgUrl: _userProfile.imgUrl,
+                    ),
+                    SeeAll(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (ctx) => SeeAllFet(
+                              title: kFet,
+                            ),
+                          ),
+                        );
+                      },
+                      title: kFet,
+                    ),
+                    FeaturedList(
+                      userName: _userProfile.name,
+                      usrImg: _userProfile.imgUrl,
+                    ),
                   ],
                 ),
-              ),
-              SeeAll(
-                onTap: () => print('See All Categories'),
-                title: kCat,
-              ),
-              CategoryList(
-                userName: _userProfile.name,
-                imgUrl: _userProfile.imgUrl,
-              ),
-              SeeAll(
-                onTap: () => print('See All Featured'),
-                title: kFet,
-              ),
-              FeaturedList(
-                userName: _userProfile.name,
-                usrImg: _userProfile.imgUrl,
-              ),
-            ],
-          ),
         ),
       ),
     );

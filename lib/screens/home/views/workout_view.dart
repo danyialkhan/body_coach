@@ -3,7 +3,7 @@ import 'package:body_coach/models/data/course.dart';
 import 'package:body_coach/models/data/fitness_app_data.dart';
 import 'package:body_coach/models/request.dart';
 import 'package:body_coach/models/user.dart';
-import 'package:body_coach/screens/home/youtube_player.dart';
+import 'package:body_coach/screens/home/components/youtube_player.dart';
 import 'package:body_coach/services/category_service.dart';
 import 'package:body_coach/services/request_service.dart';
 import 'package:body_coach/shared/constants.dart';
@@ -27,6 +27,7 @@ class WorkOutView extends StatefulWidget {
   final String userName;
   final String ownerId;
   final String userImage;
+  final String desc;
   WorkOutView({
     this.data,
     this.courseContent,
@@ -43,6 +44,7 @@ class WorkOutView extends StatefulWidget {
     this.userName,
     this.ownerId,
     this.userImage,
+    this.desc,
   });
 
   @override
@@ -59,9 +61,9 @@ class _WorkOutViewState extends State<WorkOutView> {
   }
 
   String _getTextString(int num) {
-    if(num < 10){
+    if (num < 10) {
       return '0${num + 1}';
-    }else{
+    } else {
       return '${num + 1}';
     }
   }
@@ -121,7 +123,7 @@ class _WorkOutViewState extends State<WorkOutView> {
               height: 40.0,
               width: 40.0,
               decoration: BoxDecoration(
-                color: Color(0xFF49CC96),
+                color: Colors.black45,
                 borderRadius: BorderRadius.circular(20.0),
               ),
               child: Icon(
@@ -257,14 +259,14 @@ class _WorkOutViewState extends State<WorkOutView> {
           ),
         ),
         appBar: AppBar(
-          backgroundColor: Colors.black38,
+          backgroundColor: Colors.black54,
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
             },
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
           elevation: 0,
@@ -295,12 +297,19 @@ class _WorkOutViewState extends State<WorkOutView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
-                            widget.title,
-                            style: TextStyle(
-                              fontSize: 25.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.greenAccent,
+                          Container(
+                            padding: EdgeInsets.all(5.0),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.0),
+                                color: Colors.black45
+                            ),
+                            child: Text(
+                              widget.title ?? '',
+                              style: TextStyle(
+                                fontSize: 22.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                           SizedBox(height: 10.0),
@@ -333,14 +342,40 @@ class _WorkOutViewState extends State<WorkOutView> {
                           reqId: user.uId,
                         ).requestStatusStream(),
                         builder: (ctx, reqSnapshot) {
-                          if(reqSnapshot.hasData) {
+                          if (reqSnapshot.hasData) {
                             Request req = reqSnapshot.data;
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      top: 40.0,
+                                      top: 20.0, right: 20.0, left: 20.0),
+                                  child: Text(
+                                    "Description: ",
+                                    style: TextStyle(
+                                      fontSize: 21.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.1,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
+                                  margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                                  decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: whiteShad),
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: SingleChildScrollView(
+                                    child: Text(widget.desc),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 15.0,
                                       right: 20.0,
                                       bottom: 20.0,
                                       left: 20.0),
@@ -355,16 +390,16 @@ class _WorkOutViewState extends State<WorkOutView> {
                                 StreamBuilder<List<Video>>(
                                   stream: (req?.reqStatus ?? 0) == 1
                                       ? CategoryService(catId: widget.catId)
-                                      .allVideosStream()
+                                          .allVideosStream()
                                       : CategoryService(catId: widget.catId)
-                                      .previewVideosStream(),
+                                          .previewVideosStream(),
                                   builder: (ctx, snapshot) {
                                     if (snapshot.hasData) {
                                       List<Video> videos = snapshot.data;
                                       return Expanded(
                                         child: Padding(
-                                          padding: EdgeInsets.only(
-                                              bottom: 100.0),
+                                          padding:
+                                              EdgeInsets.only(bottom: 100.0),
                                           child: ListView.builder(
                                             itemCount: videos?.length ?? 0,
                                             itemBuilder: (BuildContext context,
@@ -388,7 +423,7 @@ class _WorkOutViewState extends State<WorkOutView> {
                                 ),
                               ],
                             );
-                          }else{
+                          } else {
                             return Center(
                               child: CircularProgressIndicator(
                                 backgroundColor: purpleShad,
