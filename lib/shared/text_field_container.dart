@@ -4,9 +4,11 @@ import 'constants.dart';
 
 class TextFieldContainer extends StatelessWidget {
   final Widget child;
+  final double scale;
   const TextFieldContainer({
     Key key,
     this.child,
+    this.scale = 0.8,
   }) : super(key: key);
 
   @override
@@ -15,7 +17,7 @@ class TextFieldContainer extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-      width: size.width * 0.8,
+      width: size.width * scale,
       decoration: BoxDecoration(
         color: kPrimaryLightColor,
         borderRadius: BorderRadius.circular(29),

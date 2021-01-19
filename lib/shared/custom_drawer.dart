@@ -58,18 +58,18 @@ class _CustomDrawerState extends State<CustomDrawer> {
 //      mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                width: 190.0,
-                height: 190.0,
+                width: 100.0,
+                height: 100.0,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: Colors.blueAccent,
-                    width: 4,
+                    width: 1,
                   ),
                   image: DecorationImage(
                     fit: BoxFit.scaleDown,
-                    image: _userProfile?.imgUrl == null ?
-                    AssetImage('assets/user.png')
+                    image: _userProfile?.imgUrl == null
+                        ? AssetImage('assets/user.png')
                         : CachedNetworkImageProvider(_userProfile?.imgUrl),
                   ),
                 ),
@@ -82,10 +82,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           Divider(),
           ListTile(
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
                 builder: (ctx) => ProfileScreen(
-                      uid: profile.uId,
-                    ))),
+                  uid: profile.uId,
+                ),
+              ),
+            ),
             title: Text(
               'My Profile',
               style: TextStyle(color: Colors.black87),
@@ -95,7 +98,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ListTile(
             onTap: () {
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (ctx) => AllSubscriptions()));
+                MaterialPageRoute(
+                  builder: (ctx) => AllSubscriptions(),
+                ),
+              );
             },
             title: Text(
               'My Subscriptions',
@@ -107,8 +113,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
               ? Text('')
               : ListTile(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (ctx) => SubscribersScreen()));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (ctx) => SubscribersScreen(),
+                      ),
+                    );
                   },
                   title: Text(
                     'All Subscribers',
@@ -147,9 +156,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   ),
                 ),
           !_showAdmin ? Text('') : Divider(),
-          SizedBox(
-            height: _mq.height * 0.12,
-          ),
+          !_showAdmin
+              ? Text('')
+              : SizedBox(
+                  height: _mq.height * 0.12,
+                ),
           Center(
             child: Image.asset(
               pLogoCharcoalPath,

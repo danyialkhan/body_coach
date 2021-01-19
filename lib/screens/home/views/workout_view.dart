@@ -179,20 +179,21 @@ class _WorkOutViewState extends State<WorkOutView> {
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           height: 80.0,
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Container(
-                height: 60.0,
-                width: 70.0,
-                decoration: BoxDecoration(
-                  color: Color(0xFFFFEDEE),
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                child: Icon(
-                  Icons.favorite_border,
-                  color: Color(0xFFFF6670),
-                ),
-              ),
-              SizedBox(width: 10.0),
+              // Container(
+              //   height: 60.0,
+              //   width: 70.0,
+              //   decoration: BoxDecoration(
+              //     color: Color(0xFFFFEDEE),
+              //     borderRadius: BorderRadius.circular(30.0),
+              //   ),
+              //   child: Icon(
+              //     Icons.favorite_border,
+              //     color: Color(0xFFFF6670),
+              //   ),
+              // ),
+              //SizedBox(width: 10.0),
               _fetchingSubscription
                   ? Center(
                       child: CircularProgressIndicator(
@@ -293,7 +294,7 @@ class _WorkOutViewState extends State<WorkOutView> {
                     top: 0,
                     child: Padding(
                       padding:
-                          EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+                      EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -349,7 +350,7 @@ class _WorkOutViewState extends State<WorkOutView> {
                               children: <Widget>[
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      top: 20.0, right: 20.0, left: 20.0),
+                                      top: 15.0, right: 20.0, left: 20.0),
                                   child: Text(
                                     "Description: ",
                                     style: TextStyle(
@@ -360,13 +361,13 @@ class _WorkOutViewState extends State<WorkOutView> {
                                 ),
                                 Container(
                                   height:
-                                      MediaQuery.of(context).size.height * 0.1,
+                                  MediaQuery.of(context).size.height * 0.05,
                                   width:
-                                      MediaQuery.of(context).size.width * 0.9,
+                                  MediaQuery.of(context).size.width * 0.9,
                                   margin: EdgeInsets.only(left: 20.0, right: 20.0),
                                   decoration: BoxDecoration(
                                     border:
-                                        Border.all(color: whiteShad),
+                                    Border.all(color: whiteShad),
                                     borderRadius: BorderRadius.circular(5.0),
                                   ),
                                   child: SingleChildScrollView(
@@ -390,16 +391,16 @@ class _WorkOutViewState extends State<WorkOutView> {
                                 StreamBuilder<List<Video>>(
                                   stream: (req?.reqStatus ?? 0) == 1
                                       ? CategoryService(catId: widget.catId)
-                                          .allVideosStream()
+                                      .allVideosStream()
                                       : CategoryService(catId: widget.catId)
-                                          .previewVideosStream(),
+                                      .previewVideosStream(),
                                   builder: (ctx, snapshot) {
                                     if (snapshot.hasData) {
                                       List<Video> videos = snapshot.data;
                                       return Expanded(
                                         child: Padding(
                                           padding:
-                                              EdgeInsets.only(bottom: 100.0),
+                                          EdgeInsets.only(bottom: 100.0),
                                           child: ListView.builder(
                                             itemCount: videos?.length ?? 0,
                                             itemBuilder: (BuildContext context,

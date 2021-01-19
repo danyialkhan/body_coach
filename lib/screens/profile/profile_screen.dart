@@ -1,5 +1,5 @@
-import 'package:body_coach/models/user.dart';
 import 'package:body_coach/models/user_profile.dart';
+import 'package:body_coach/screens/profile/components/text_input_field.dart';
 import 'package:body_coach/services/user_service.dart';
 import 'package:body_coach/shared/constants.dart';
 import 'package:body_coach/shared/image.dart';
@@ -59,8 +59,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('set state called');
-    var user = Provider.of<User>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text('User Profile'),
@@ -80,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _isLoading
                     ? Center(
                         child: CircularProgressIndicator(
-                        backgroundColor: Theme.of(context).primaryColor,
+                        backgroundColor: purpleShad,
                       ))
                     : Expanded(
                         child: Form(
@@ -169,73 +167,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
 
                                 // Name field
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.4,
-                                      padding: EdgeInsets.only(
-                                        left:
-                                            MediaQuery.of(context).size.width *
-                                                0.1,
-                                        top:
-                                            MediaQuery.of(context).size.height *
-                                                0.02,
-                                        bottom:
-                                            MediaQuery.of(context).size.height *
-                                                0.02,
-                                      ),
-                                      child: Text(
-                                        'Name',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.025,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.6,
-                                      padding: EdgeInsets.only(
-                                        right:
-                                            MediaQuery.of(context).size.width *
-                                                0.1,
-                                      ),
-                                      child: TextFormField(
-                                        initialValue: userProfile?.name,
-                                        validator: (val) => val.isEmpty
-                                            ? 'Please enter a name'
-                                            : null,
-                                        onChanged: (val) => _currentName = val,
-                                        decoration: InputDecoration(
-                                          hintText: 'Name',
-                                          hintStyle: TextStyle(
-                                            color: Colors.grey,
-                                          ),
-                                          border: InputBorder.none,
-                                          focusedBorder: InputBorder.none,
-                                          enabledBorder: InputBorder.none,
-                                          errorBorder: InputBorder.none,
-                                          disabledBorder: InputBorder.none,
-                                        ),
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.02,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        textAlign: TextAlign.right,
-                                      ),
-                                    ),
-                                  ],
+                                TextInputField(
+                                  label: 'Name',
+                                  name: userProfile?.name,
+                                  hintText: 'Name',
+                                  validator: (val) => val.isEmpty
+                                      ? 'Please enter a name'
+                                      : null,
+                                  onChanged: (val) => _currentName = val,
                                 ),
 
                                 // a line...
@@ -457,7 +396,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
 
-                                // Email field
+                                // phone field
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -660,13 +599,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       _toggleLoading();
                                       await UserService(uId: widget.uid)
                                           .updateUser(
-                                        mobileNumber: _phoneNumber,
+                                        mobileNumber: _phoneNumber ?? userProfile.mobileNumber,
                                         email: _currentEmail ??
                                             userProfile.email,
                                         gender: _currentGender ??
                                             (userProfile?.gender ?? 0),
                                         name: _currentName ?? userProfile.name,
                                         dob: _currentDate ?? userProfile.dob,
+                                        imgUrl: userProfile.imgUrl,
                                       );
                                       _toggleLoading();
                                     }

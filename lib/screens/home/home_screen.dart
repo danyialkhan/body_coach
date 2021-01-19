@@ -10,6 +10,7 @@ import 'package:body_coach/screens/home/components/title_see_all_strap.dart';
 import 'package:body_coach/services/user_service.dart';
 import 'package:body_coach/shared/constants.dart';
 import 'package:body_coach/shared/custom_drawer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -59,16 +60,16 @@ class _HomeScreenState extends State<HomeScreen> {
           icon: Icon(Icons.sort),
         ),
         actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0, top: 10.0),
-            child: Image(
-              height: 40.0,
-              width: 40.0,
-              image: (_userProfile == null || _userProfile?.imgUrl == null)
-                  ? AssetImage('assets/user.png')
-                  : NetworkImage(_userProfile.imgUrl),
+          Container(
+            margin: EdgeInsets.all(5.0),
+            child: CircleAvatar(
+              radius: 25.0,
+              backgroundImage:
+                  (_userProfile == null || _userProfile?.imgUrl == null)
+                      ? AssetImage('assets/user.png')
+                      : CachedNetworkImageProvider(_userProfile.imgUrl),
             ),
-          )
+          ),
         ],
         elevation: 0,
       ),
@@ -87,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     SizedBox(height: 20.0),
                     Text(
-                      _isLoading ? "Hey ...," : 'Hey ${_userProfile.name}',
+                      _isLoading ? "Hey ...," : 'Hey, ${_userProfile.name}',
                       style: TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 28.0),
                     ),
@@ -96,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       kHomeDescription,
                       style: TextStyle(fontSize: 22.0, color: purpleShad),
                     ),
-                 // Search(),
+                    // Search(),
                     SeeAll(
                       onTap: () {
                         Navigator.of(context).push(

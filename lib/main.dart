@@ -1,6 +1,7 @@
 import 'package:body_coach/models/category_model.dart';
 import 'package:body_coach/screens/splash_screen/splash_screen.dart';
 import 'package:body_coach/services/auth.dart';
+import 'package:body_coach/shared/constants.dart';
 import 'package:body_coach/shared/image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +37,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
           primaryColor: Colors.white,
+
+          accentColor: whiteShad,
+          accentColorBrightness: Brightness.light,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: SplashScreen(),

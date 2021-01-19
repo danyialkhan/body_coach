@@ -1,5 +1,4 @@
 import 'package:body_coach/screens/authentication/login/login_screen.dart';
-import 'package:body_coach/screens/authentication/signup/components/social_icon.dart';
 import 'package:body_coach/screens/wrapper.dart';
 import 'package:body_coach/services/auth.dart';
 import 'package:body_coach/shared/already_have_an_account_acheck.dart';
@@ -9,7 +8,6 @@ import 'package:body_coach/shared/rounded_input_field.dart';
 import 'package:body_coach/shared/rounded_password_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'or_divider.dart';
 
 class Body extends StatefulWidget {
   @override
@@ -21,6 +19,7 @@ class _BodyState extends State<Body> {
   String _email;
   String _password;
   String _confirmPassword;
+
 
   _toggleIsLoading() {
     setState(() {
@@ -47,7 +46,7 @@ class _BodyState extends State<Body> {
               pSignUpSvg,
               height: size.height * 0.35,
             ),
-            SizedBox(height: size.height * 0.03),
+           // SizedBox(height: size.height * 0.03),
             RoundedInputField(
               hintText: kYourEmail,
               onChanged: (value) {
@@ -60,6 +59,7 @@ class _BodyState extends State<Body> {
                 return null;
               },
             ),
+
             RoundedPasswordField(
               title: kTxtPassword,
               onChanged: (value) {
@@ -124,7 +124,8 @@ class _BodyState extends State<Body> {
                 );
               },
             ),
-            OrDivider(),
+            SizedBox(height: size.height * 0.05),
+            //OrDivider(),
             // Row(
             //   mainAxisAlignment: MainAxisAlignment.center,
             //   children: <Widget>[

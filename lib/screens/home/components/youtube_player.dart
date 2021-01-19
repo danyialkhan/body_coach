@@ -7,13 +7,15 @@ class YoutubeVideoPlayer extends StatefulWidget {
   final String videoLink;
   final String title;
 
-  YoutubeVideoPlayer({this.videoLink, this.title,});
+  YoutubeVideoPlayer({
+    this.videoLink,
+    this.title,
+  });
   @override
   _YoutubeVideoPlayerState createState() => _YoutubeVideoPlayerState();
 }
 
 class _YoutubeVideoPlayerState extends State<YoutubeVideoPlayer> {
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   YoutubePlayerController _controller;
   PlayerState _playerState;
@@ -28,14 +30,14 @@ class _YoutubeVideoPlayerState extends State<YoutubeVideoPlayer> {
       text: TextSpan(
         text: '$title : ',
         style: const TextStyle(
-          color: Colors.blueAccent,
+          color: Colors.black54,
           fontWeight: FontWeight.bold,
         ),
         children: [
           TextSpan(
             text: value ?? '',
             style: const TextStyle(
-              color: Colors.blueAccent,
+              color: Colors.black54,
               fontWeight: FontWeight.w300,
             ),
           ),
@@ -57,6 +59,10 @@ class _YoutubeVideoPlayerState extends State<YoutubeVideoPlayer> {
     )..addListener(listener);
     _videoMetaData = const YoutubeMetaData();
     _playerState = PlayerState.unknown;
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
     super.initState();
   }
 
@@ -106,16 +112,6 @@ class _YoutubeVideoPlayerState extends State<YoutubeVideoPlayer> {
               maxLines: 1,
             ),
           ),
-          // IconButton(
-          //   icon: const Icon(
-          //     Icons.settings,
-          //     color: Colors.white,
-          //     size: 25.0,
-          //   ),
-          //   onPressed: () {
-          //     print('Settings Tapped!');
-          //   },
-          // ),
         ],
         onReady: () {
           _isPlayerReady = true;
@@ -127,30 +123,11 @@ class _YoutubeVideoPlayerState extends State<YoutubeVideoPlayer> {
       ),
       builder: (ctx, player) => Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(
-          title: Text(
-            widget.title,
-            style: TextStyle(color: purpleShad),
+        body: Container(
+          color: Colors.black,
+          child: Center(
+            child: player,
           ),
-        ),
-        body: ListView(
-          children: <Widget>[
-            player,
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: <Widget>[
-                  _space,
-                  _text('Title', _videoMetaData.title),
-                  _space,
-                  _text('Channel', _videoMetaData.author),
-                  _space,
-                  _text('Video Id', _videoMetaData.videoId),
-                  _space,
-                ],
-              ),
-            ),
-          ],
         ),
       ),
     );

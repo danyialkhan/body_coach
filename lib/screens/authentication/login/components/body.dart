@@ -1,4 +1,5 @@
 import 'package:body_coach/screens/authentication/signup/signup_screen.dart';
+import 'package:body_coach/screens/home/home_screen.dart';
 import 'package:body_coach/services/auth.dart';
 import 'package:body_coach/shared/already_have_an_account_acheck.dart';
 import 'package:body_coach/shared/constants.dart';
@@ -76,7 +77,9 @@ class _BodyState extends State<Body> {
                         try {
                           _toggleIsLoading();
                           await Auth().signIn(_email, _password);
-                          Navigator.pop(context);
+                          Navigator.pushReplacement(context, MaterialPageRoute(
+                            builder: (ctx) => HomeScreen()
+                          ));
                           _toggleIsLoading();
                         } catch (e) {
                           _toggleIsLoading();
