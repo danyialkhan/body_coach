@@ -10,7 +10,6 @@ import 'package:body_coach/screens/home/components/title_see_all_strap.dart';
 import 'package:body_coach/services/user_service.dart';
 import 'package:body_coach/shared/constants.dart';
 import 'package:body_coach/shared/custom_drawer.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -28,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     var user = Provider.of<User>(context, listen: false);
-    _getUserProfile(user.uId);
+    _getUserProfile(user?.uId ?? '');
     super.initState();
   }
 
@@ -57,20 +56,11 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () {
             _drawerKey.currentState.openDrawer();
           },
-          icon: Icon(Icons.sort),
-        ),
-        actions: <Widget>[
-          Container(
-            margin: EdgeInsets.all(5.0),
-            child: CircleAvatar(
-              radius: 25.0,
-              backgroundImage:
-                  (_userProfile == null || _userProfile?.imgUrl == null)
-                      ? AssetImage('assets/user.png')
-                      : CachedNetworkImageProvider(_userProfile.imgUrl),
-            ),
+          icon: Icon(
+            Icons.sort,
+            color: whiteShad,
           ),
-        ],
+        ),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -88,14 +78,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     SizedBox(height: 20.0),
                     Text(
-                      _isLoading ? "Hey ...," : 'Hey, ${_userProfile.name}',
+                      _isLoading ? "Hey ...," : 'Hey, ${_userProfile?.name}',
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 28.0),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 28.0,
+                        color: whiteShad,
+                      ),
                     ),
                     SizedBox(height: 15.0),
                     Text(
                       kHomeDescription,
-                      style: TextStyle(fontSize: 22.0, color: purpleShad),
+                      style: TextStyle(
+                        fontSize: 22.0,
+                        color: greyShad,
+                      ),
                     ),
                     // Search(),
                     SeeAll(
@@ -111,8 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: kMyLib,
                     ),
                     MyLibraryList(
-                      userName: _userProfile.name,
-                      imgUrl: _userProfile.imgUrl,
+                      userName: _userProfile?.name,
+                      imgUrl: _userProfile?.imgUrl,
                     ),
                     SeeAll(
                       onTap: () {
@@ -120,6 +116,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           MaterialPageRoute(
                             builder: (ctx) => SeeAllCat(
                               title: kCat,
+                              userName: _userProfile?.name,
+                              imgUrl: _userProfile?.imgUrl,
                             ),
                           ),
                         );
@@ -127,8 +125,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: kCat,
                     ),
                     CategoryList(
-                      userName: _userProfile.name,
-                      imgUrl: _userProfile.imgUrl,
+                      userName: _userProfile?.name,
+                      imgUrl: _userProfile?.imgUrl,
                     ),
                     SeeAll(
                       onTap: () {
@@ -136,6 +134,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           MaterialPageRoute(
                             builder: (ctx) => SeeAllFet(
                               title: kFet,
+                              userName: _userProfile?.name,
+                              imgUrl: _userProfile?.imgUrl,
                             ),
                           ),
                         );
@@ -143,8 +143,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: kFet,
                     ),
                     FeaturedList(
-                      userName: _userProfile.name,
-                      usrImg: _userProfile.imgUrl,
+                      userName: _userProfile?.name,
+                      usrImg: _userProfile?.imgUrl,
                     ),
                   ],
                 ),

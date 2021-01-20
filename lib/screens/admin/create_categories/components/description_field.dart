@@ -29,14 +29,14 @@ class DescriptionField extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18.0,
-              color: purpleShad,
+              color: whiteShad,
             ),
           ),
           Container(
             width: MediaQuery.of(context).size.width * 0.6,
             padding: EdgeInsets.all(5.0),
             decoration: BoxDecoration(
-              border: Border.all(color: purpleShad),
+              border: Border.all(color: whiteShad),
               borderRadius: BorderRadius.circular(5.0),
             ),
             child: TextFormField(

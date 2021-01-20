@@ -1,4 +1,5 @@
 import 'package:body_coach/models/user_profile.dart';
+import 'package:body_coach/screens/profile/components/email_input_field.dart';
 import 'package:body_coach/screens/profile/components/text_input_field.dart';
 import 'package:body_coach/services/user_service.dart';
 import 'package:body_coach/shared/constants.dart';
@@ -23,6 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final picker = ImagePicker();
   String _dob;
+  String _therapist;
   List<String> genderList = ['Gender', 'Male', 'Female'];
   int _currentGender;
   bool checkNewsletter = false;
@@ -177,6 +179,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   onChanged: (val) => _currentName = val,
                                 ),
 
+                                Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom:
+                                      BorderSide(color: Colors.grey[300]),
+                                    ),
+                                  ),
+                                ),
+
+                                TextInputField(
+                                  label: 'Coach',
+                                  name: userProfile?.therapist,
+                                  hintText: 'Coach or therapist name',
+                                  validator: (val) => val.isEmpty
+                                      ? 'Please enter a name'
+                                      : null,
+                                  onChanged: (val) => _therapist = val,
+                                ),
+
                                 // a line...
                                 Container(
                                   width: MediaQuery.of(context).size.width,
@@ -189,81 +211,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
 
                                 // Email field
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.4,
-                                      padding: EdgeInsets.only(
-                                        left:
-                                            MediaQuery.of(context).size.width *
-                                                0.1,
-                                        top:
-                                            MediaQuery.of(context).size.height *
-                                                0.02,
-                                        bottom:
-                                            MediaQuery.of(context).size.height *
-                                                0.02,
-                                      ),
-                                      child: Text(
-                                        'Email',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.025,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.6,
-                                      padding: EdgeInsets.only(
-                                        right:
-                                            MediaQuery.of(context).size.width *
-                                                0.1,
-                                      ),
-                                      child: TextFormField(
-                                        initialValue: userProfile?.email,
-                                        validator: (val) {
-                                          RegExp reg = RegExp(
-                                              r"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$");
-                                          if (val.isEmpty) {
-                                            return "Please enter email";
-                                          }
-                                          if (!reg.hasMatch(val)) {
-                                            return "Enter valid email";
-                                          }
-                                          return null;
-                                        },
-                                        onChanged: (val) => _currentEmail = val,
-                                        decoration: InputDecoration(
-                                          hintText: 'Email',
-                                          hintStyle: TextStyle(
-                                            color: Colors.grey,
-                                          ),
-                                          border: InputBorder.none,
-                                          focusedBorder: InputBorder.none,
-                                          enabledBorder: InputBorder.none,
-                                          errorBorder: InputBorder.none,
-                                          disabledBorder: InputBorder.none,
-                                        ),
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.02,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        textAlign: TextAlign.right,
-                                      ),
-                                    ),
-                                  ],
+                                EmailInputField(
+                                  title: 'Email',
+                                  email: userProfile?.email,
+                                  hint: 'Email',
+                                  validator: (val) {
+                                    RegExp reg = RegExp(
+                                        r"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$");
+                                    if (val.isEmpty) {
+                                      return "Please enter email";
+                                    }
+                                    if (!reg.hasMatch(val)) {
+                                      return "Enter valid email";
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (val) => _currentEmail = val,
                                 ),
 
                                 // a line...
@@ -300,7 +263,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       child: Text(
                                         'Birthday',
                                         style: TextStyle(
-                                          color: Colors.black,
+                                          color: whiteShad,
                                           fontSize: MediaQuery.of(context)
                                                   .size
                                                   .height *
@@ -359,7 +322,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   style: TextStyle(
                                                     color: _dob == 'DD-MM-YYYY'
                                                         ? Colors.grey
-                                                        : Colors.black,
+                                                        : whiteShad,
                                                     fontSize:
                                                         MediaQuery.of(context)
                                                                 .size
@@ -419,7 +382,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       child: Text(
                                         'Phone Number',
                                         style: TextStyle(
-                                          color: Colors.black,
+                                          color: whiteShad,
                                           fontSize: MediaQuery.of(context)
                                                   .size
                                                   .height *
@@ -457,7 +420,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           disabledBorder: InputBorder.none,
                                         ),
                                         style: TextStyle(
-                                          color: Colors.black,
+                                          color: whiteShad,
                                           fontSize: MediaQuery.of(context)
                                                   .size
                                                   .height *
@@ -502,7 +465,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       child: Text(
                                         'Gender',
                                         style: TextStyle(
-                                          color: Colors.black,
+                                          color: whiteShad,
                                           fontSize: MediaQuery.of(context)
                                                   .size
                                                   .height *
@@ -542,7 +505,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                           1] ==
                                                   'Gender'
                                               ? Colors.grey
-                                              : Colors.black,
+                                              : whiteShad,
                                           fontSize: MediaQuery.of(context)
                                                   .size
                                                   .height *
@@ -607,6 +570,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         name: _currentName ?? userProfile.name,
                                         dob: _currentDate ?? userProfile.dob,
                                         imgUrl: userProfile.imgUrl,
+                                        therapist: _therapist ?? userProfile.therapist,
                                       );
                                       _toggleLoading();
                                     }
@@ -623,27 +587,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               0.015,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: purpleShad,
+                                      color: lightBlue,
                                       borderRadius: BorderRadius.all(
                                         Radius.circular(
                                             MediaQuery.of(context).size.height *
                                                 0.01),
                                       ),
-                                      boxShadow: [
-                                        new BoxShadow(
-                                          color: Colors.grey,
-                                          offset: new Offset(0.0, 3.0),
-                                          blurRadius: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.008,
-                                        )
-                                      ],
                                     ),
                                     child: Text(
                                       'Update',
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: whiteShad,
                                         fontSize:
                                             MediaQuery.of(context).size.height *
                                                 0.025,

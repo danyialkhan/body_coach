@@ -22,7 +22,7 @@ class MyLibraryList extends StatelessWidget {
     var user = Provider.of<User>(context);
     return Container(
       child: StreamBuilder<List<Subscribers>>(
-        stream: UserService(uId: user.uId).userLibraryStream(),
+        stream: UserService(uId: user?.uId ?? '').userLibraryStream(),
         builder: (ctx, snapshot) {
           if (snapshot.hasData) {
             List<Subscribers> models = snapshot.data;
@@ -34,7 +34,12 @@ class MyLibraryList extends StatelessWidget {
                         border: Border.all(color: whiteShad, width: 2.0),
                         borderRadius: BorderRadius.circular(5.0),
                       ),
-                      child: Text('Subscribe to start your first workout..'),
+                      child: Text(
+                        'Subscribe to start your first workout..',
+                        style: TextStyle(
+                          color: whiteShad,
+                        ),
+                      ),
                     ),
                   )
                 : Container(

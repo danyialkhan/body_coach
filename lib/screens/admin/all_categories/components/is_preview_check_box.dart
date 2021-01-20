@@ -8,15 +8,17 @@ class IsPreviewChkBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 10.0, right: MediaQuery.of(context).size.width * 0.4),
+      color: greyShad,
+      margin: EdgeInsets.only(
+          left: 10.0, right: MediaQuery.of(context).size.width * 0.4),
       child: CheckboxListTile(
-        activeColor: purpleShad,
+        activeColor: greyShad,
         title: Text(
           'Is Preview',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18.0,
-            color: purpleShad,
+            color: greyShad,
           ),
         ),
         value: value,

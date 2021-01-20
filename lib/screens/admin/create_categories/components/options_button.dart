@@ -10,7 +10,7 @@ class OptionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     var mq = MediaQuery.of(context).size;
     return Card(
-      color: purpleShad,
+      color: lightBlue,
       elevation: 1,
       child: InkWell(
         onTap: onTap,
@@ -22,7 +22,7 @@ class OptionButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                color: kPrimaryLightColor,
+                color: whiteShad,
               ),
             ),
           ),

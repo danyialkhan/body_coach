@@ -1,6 +1,7 @@
 import 'package:body_coach/models/user.dart';
 import 'package:body_coach/models/user_profile.dart';
 import 'package:body_coach/screens/admin/options_screen.dart';
+import 'package:body_coach/screens/authentication/landing/landing_screen.dart';
 import 'package:body_coach/screens/profile/profile_screen.dart';
 import 'package:body_coach/screens/subscribetion_view/all_subscribers.dart';
 import 'package:body_coach/screens/subscribetion_view/all_subscribtions.dart';
@@ -51,6 +52,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
     var profile = Provider.of<User>(context);
     var _mq = MediaQuery.of(context).size;
     return DrawerHeader(
+      decoration: BoxDecoration(color: Theme.of(context).primaryColor),
       child: ListView(
         children: <Widget>[
           Column(
@@ -76,7 +78,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
               ),
               Padding(
                 padding: const EdgeInsets.all(25.0),
-                child: Text(_userProfile?.name ?? 'User', textScaleFactor: 1.5),
+                child: Text(
+                  _userProfile?.name ?? 'User',
+                  textScaleFactor: 1.5,
+                  style: TextStyle(
+                    color: whiteShad,
+                  ),
+                ),
               )
             ],
           ),
@@ -91,7 +99,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             ),
             title: Text(
               'My Profile',
-              style: TextStyle(color: Colors.black87),
+              style: TextStyle(color: whiteShad),
             ),
           ),
           Divider(),
@@ -105,7 +113,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             },
             title: Text(
               'My Subscriptions',
-              style: TextStyle(color: Colors.black87),
+              style: TextStyle(color: whiteShad),
             ),
           ),
           Divider(),
@@ -121,18 +129,21 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   },
                   title: Text(
                     'All Subscribers',
-                    style: TextStyle(color: Colors.black87),
+                    style: TextStyle(color: whiteShad),
                   ),
                 ),
           !_showAdmin ? Text('') : Divider(),
           ListTile(
             onTap: () async {
               await Auth().logOut();
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => LandingScreen(),),
+                  (Route<dynamic> route) => false);
             },
             title: Text(
               'Logout',
               style: TextStyle(
-                color: Colors.black87,
+                color: whiteShad,
               ),
             ),
           ),
@@ -151,7 +162,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   title: Text(
                     'Admin',
                     style: TextStyle(
-                      color: Colors.black87,
+                      color: whiteShad,
                     ),
                   ),
                 ),

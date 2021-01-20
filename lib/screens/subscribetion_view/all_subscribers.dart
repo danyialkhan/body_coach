@@ -32,7 +32,6 @@ class _SubscribersScreenState extends State<SubscribersScreen>
     var user = Provider.of<User>(context);
     return Scaffold(
       appBar: GFAppBar(
-        backgroundColor: whiteShad,
         title: Text(
           "All Subscribers",
         ),

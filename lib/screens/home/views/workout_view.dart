@@ -104,6 +104,7 @@ class _WorkOutViewState extends State<WorkOutView> {
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
+                      color: whiteShad,
                     ),
                   ),
                 ],
@@ -123,7 +124,7 @@ class _WorkOutViewState extends State<WorkOutView> {
               height: 40.0,
               width: 40.0,
               decoration: BoxDecoration(
-                color: Colors.black45,
+                color: greyShad,
                 borderRadius: BorderRadius.circular(20.0),
               ),
               child: Icon(
@@ -170,82 +171,263 @@ class _WorkOutViewState extends State<WorkOutView> {
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<User>(context);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Course App",
-      theme: ThemeData(primaryColor: Colors.white),
-      home: Scaffold(
-        bottomNavigationBar: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
-          height: 80.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              // Container(
-              //   height: 60.0,
-              //   width: 70.0,
-              //   decoration: BoxDecoration(
-              //     color: Color(0xFFFFEDEE),
-              //     borderRadius: BorderRadius.circular(30.0),
-              //   ),
-              //   child: Icon(
-              //     Icons.favorite_border,
-              //     color: Color(0xFFFF6670),
-              //   ),
-              // ),
-              //SizedBox(width: 10.0),
-              _fetchingSubscription
-                  ? Center(
-                      child: CircularProgressIndicator(
-                        backgroundColor: purpleShad,
+    return Scaffold(
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        height: 80.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            // Container(
+            //   height: 60.0,
+            //   width: 70.0,
+            //   decoration: BoxDecoration(
+            //     color: Color(0xFFFFEDEE),
+            //     borderRadius: BorderRadius.circular(30.0),
+            //   ),
+            //   child: Icon(
+            //     Icons.favorite_border,
+            //     color: Color(0xFFFF6670),
+            //   ),
+            // ),
+            //SizedBox(width: 10.0),
+            _fetchingSubscription
+                ? Center(
+              child: CircularProgressIndicator(
+                backgroundColor: purpleShad,
+              ),
+            )
+                : StreamBuilder<Request>(
+              stream: RequestService(
+                catId: widget.catId,
+                reqId: user.uId,
+              ).requestStatusStream(),
+              builder: (ctx, snapshot) {
+                if (snapshot.hasData) {
+                  Request request = snapshot.data;
+                  return GestureDetector(
+                    onTap: request.reqStatus < 3
+                        ? null
+                        : () async {
+                      if (request.reqStatus == 3) {
+                        _toggleSubscription();
+                        await RequestService(
+                          sender: user.uId,
+                          receiver: widget.ownerId,
+                          reqId: user.uId,
+                          catId: widget.catId,
+                        ).createRequest(
+                          name: widget.userName,
+                          senderImg: widget.userImage,
+                          trainerImg: widget.imageUrl,
+                          trainer: widget.title,
+                        );
+                        _toggleSubscription();
+                      }
+                    },
+                    child: Container(
+                      height: 60.0,
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      decoration: BoxDecoration(
+                        color: lightBlue,
+                        borderRadius: BorderRadius.circular(30.0),
                       ),
-                    )
-                  : StreamBuilder<Request>(
+                      child: Center(
+                        child: Text(
+                          _getButtonStatus(request.reqStatus ?? 3),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: purpleShad,
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+      appBar: AppBar(
+        backgroundColor: Colors.black54,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+        ),
+        elevation: 0,
+      ),
+      body: Column(
+        children: <Widget>[
+          Container(
+            height: 400.0,
+            child: Stack(
+              overflow: Overflow.visible,
+              children: <Widget>[
+                Positioned(
+                  top: -56.0,
+                  child: Image(
+                    fit: BoxFit.cover,
+                    width: MediaQuery.of(context).size.width,
+                    height: 400.0,
+                    image: widget.imageUrl == null
+                        ? AssetImage('assets/icons/BodyCo_Logo2_Charcoal.png')
+                        : CachedNetworkImageProvider(widget?.imageUrl),
+                  ),
+                ),
+                Positioned(
+                  top: 0,
+                  child: Padding(
+                    padding:
+                    EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.0),
+                              color: Colors.black45),
+                          child: Text(
+                            widget.title ?? '',
+                            style: TextStyle(
+                              fontSize: 22.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10.0),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          Expanded(
+            child: Stack(
+              overflow: Overflow.visible,
+              children: <Widget>[
+                Positioned(
+                  top: -95,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height - 400,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(50.0),
+                        topRight: Radius.circular(50.0),
+                      ),
+                    ),
+                    child: StreamBuilder<Request>(
                       stream: RequestService(
                         catId: widget.catId,
                         reqId: user.uId,
                       ).requestStatusStream(),
-                      builder: (ctx, snapshot) {
-                        if (snapshot.hasData) {
-                          Request request = snapshot.data;
-                          return GestureDetector(
-                            onTap: request.reqStatus < 3
-                                ? null
-                                : () async {
-                                    if (request.reqStatus == 3) {
-                                      _toggleSubscription();
-                                      await RequestService(
-                                        sender: user.uId,
-                                        receiver: widget.ownerId,
-                                        reqId: user.uId,
-                                        catId: widget.catId,
-                                      ).createRequest(
-                                        name: widget.userName,
-                                        senderImg: widget.userImage,
-                                        trainerImg: widget.imageUrl,
-                                        trainer: widget.title,
-                                      );
-                                      _toggleSubscription();
-                                    }
-                                  },
-                            child: Container(
-                              height: 60.0,
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              decoration: BoxDecoration(
-                                color: Color(0xFF6E8AFA),
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              child: Center(
+                      builder: (ctx, reqSnapshot) {
+                        if (reqSnapshot.hasData) {
+                          Request req = reqSnapshot.data;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: 15.0, right: 20.0, left: 20.0),
                                 child: Text(
-                                  _getButtonStatus(request.reqStatus ?? 3),
+                                  "Description: ",
                                   style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
+                                      fontSize: 21.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: whiteShad),
+                                ),
+                              ),
+                              Container(
+                                height:
+                                MediaQuery.of(context).size.height * 0.05,
+                                width:
+                                MediaQuery.of(context).size.width * 0.9,
+                                margin:
+                                EdgeInsets.only(left: 20.0, right: 20.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: whiteShad),
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: SingleChildScrollView(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(5.0),
+                                    child: Text(
+                                      widget.desc,
+                                      style: TextStyle(
+                                        color: whiteShad,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: 15.0,
+                                    right: 20.0,
+                                    bottom: 20.0,
+                                    left: 20.0),
+                                child: Text(
+                                  "Workout Videos",
+                                  style: TextStyle(
+                                    fontSize: 21.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: whiteShad,
+                                  ),
+                                ),
+                              ),
+                              StreamBuilder<List<Video>>(
+                                stream: (req?.reqStatus ?? 0) == 1
+                                    ? CategoryService(catId: widget.catId)
+                                    .allVideosStream()
+                                    : CategoryService(catId: widget.catId)
+                                    .previewVideosStream(),
+                                builder: (ctx, snapshot) {
+                                  if (snapshot.hasData) {
+                                    List<Video> videos = snapshot.data;
+                                    return Expanded(
+                                      child: Padding(
+                                        padding:
+                                        EdgeInsets.only(bottom: 100.0),
+                                        child: ListView.builder(
+                                          itemCount: videos?.length ?? 0,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return _courseContentList(
+                                              videos[index],
+                                              index,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        backgroundColor: purpleShad,
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ],
                           );
                         } else {
                           return Center(
@@ -256,190 +438,12 @@ class _WorkOutViewState extends State<WorkOutView> {
                         }
                       },
                     ),
-            ],
-          ),
-        ),
-        appBar: AppBar(
-          backgroundColor: Colors.black54,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
-            ),
-          ),
-          elevation: 0,
-        ),
-        body: Column(
-          children: <Widget>[
-            Container(
-              height: 400.0,
-              child: Stack(
-                overflow: Overflow.visible,
-                children: <Widget>[
-                  Positioned(
-                    top: -56.0,
-                    child: Image(
-                      fit: BoxFit.cover,
-                      width: MediaQuery.of(context).size.width,
-                      height: 400.0,
-                      image: widget.imageUrl == null
-                          ? AssetImage('assets/icons/BodyCo_Logo2_Charcoal.png')
-                          : CachedNetworkImageProvider(widget?.imageUrl),
-                    ),
                   ),
-                  Positioned(
-                    top: 0,
-                    child: Padding(
-                      padding:
-                      EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.all(5.0),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.0),
-                                color: Colors.black45
-                            ),
-                            child: Text(
-                              widget.title ?? '',
-                              style: TextStyle(
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 10.0),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              ),
+                )
+              ],
             ),
-            Expanded(
-              child: Stack(
-                overflow: Overflow.visible,
-                children: <Widget>[
-                  Positioned(
-                    top: -95,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height - 400,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(50.0),
-                          topRight: Radius.circular(50.0),
-                        ),
-                      ),
-                      child: StreamBuilder<Request>(
-                        stream: RequestService(
-                          catId: widget.catId,
-                          reqId: user.uId,
-                        ).requestStatusStream(),
-                        builder: (ctx, reqSnapshot) {
-                          if (reqSnapshot.hasData) {
-                            Request req = reqSnapshot.data;
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 15.0, right: 20.0, left: 20.0),
-                                  child: Text(
-                                    "Description: ",
-                                    style: TextStyle(
-                                      fontSize: 21.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height:
-                                  MediaQuery.of(context).size.height * 0.05,
-                                  width:
-                                  MediaQuery.of(context).size.width * 0.9,
-                                  margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                                  decoration: BoxDecoration(
-                                    border:
-                                    Border.all(color: whiteShad),
-                                    borderRadius: BorderRadius.circular(5.0),
-                                  ),
-                                  child: SingleChildScrollView(
-                                    child: Text(widget.desc),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 15.0,
-                                      right: 20.0,
-                                      bottom: 20.0,
-                                      left: 20.0),
-                                  child: Text(
-                                    "Workout Videos",
-                                    style: TextStyle(
-                                      fontSize: 21.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                StreamBuilder<List<Video>>(
-                                  stream: (req?.reqStatus ?? 0) == 1
-                                      ? CategoryService(catId: widget.catId)
-                                      .allVideosStream()
-                                      : CategoryService(catId: widget.catId)
-                                      .previewVideosStream(),
-                                  builder: (ctx, snapshot) {
-                                    if (snapshot.hasData) {
-                                      List<Video> videos = snapshot.data;
-                                      return Expanded(
-                                        child: Padding(
-                                          padding:
-                                          EdgeInsets.only(bottom: 100.0),
-                                          child: ListView.builder(
-                                            itemCount: videos?.length ?? 0,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return _courseContentList(
-                                                videos[index],
-                                                index,
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      );
-                                    } else {
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          backgroundColor: purpleShad,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                ),
-                              ],
-                            );
-                          } else {
-                            return Center(
-                              child: CircularProgressIndicator(
-                                backgroundColor: purpleShad,
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }

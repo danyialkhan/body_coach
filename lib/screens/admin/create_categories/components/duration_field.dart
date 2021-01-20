@@ -28,14 +28,14 @@ class DurationField extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18.0,
-              color: purpleShad,
+              color: whiteShad,
             ),
           ),
           Container(
             width: 35.0,
             height: 35.0,
             decoration: BoxDecoration(
-                border: Border.all(color: kPrimaryColor),
+                border: Border.all(color: whiteShad),
                 borderRadius: BorderRadius.circular(5.0)),
             child: TextFormField(
               onSaved: onHourSaved,
@@ -59,14 +59,14 @@ class DurationField extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18.0,
-              color: purpleShad,
+              color: whiteShad,
             ),
           ),
           Container(
             width: 35.0,
             height: 35.0,
             decoration: BoxDecoration(
-                border: Border.all(color: kPrimaryColor),
+                border: Border.all(color: whiteShad),
                 borderRadius: BorderRadius.circular(5.0)),
             child: TextFormField(
               onSaved: onMinSaved,
@@ -90,14 +90,14 @@ class DurationField extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18.0,
-              color: purpleShad,
+              color: whiteShad,
             ),
           ),
           Container(
             width: 35.0,
             height: 35.0,
             decoration: BoxDecoration(
-                border: Border.all(color: kPrimaryColor),
+                border: Border.all(color: whiteShad),
                 borderRadius: BorderRadius.circular(5.0)),
             child: TextFormField(
               onSaved: onSecSaved,
@@ -121,7 +121,7 @@ class DurationField extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18.0,
-              color: purpleShad,
+              color: whiteShad,
             ),
           ),
         ],

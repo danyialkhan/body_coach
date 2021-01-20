@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           Center(
             child: Image.asset(
-              "assets/icons/BodyCo_Logo_Charcoal.png",
+              "assets/icons/BodyCo_Logo_White.png",
               width: MediaQuery.of(context).size.width * 0.4,
             ),
           ),

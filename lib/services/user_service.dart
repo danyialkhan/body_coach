@@ -24,6 +24,7 @@ class UserService {
     String imgUrl,
     DateTime dob,
     String isoCode,
+    String therapist,
     int gender,
   }) async {
     try {
@@ -39,6 +40,7 @@ class UserService {
               city: city,
               address: address,
               isoCode: isoCode,
+              therapist: therapist,
               gender: gender)
           .toJson());
     } catch (e) {

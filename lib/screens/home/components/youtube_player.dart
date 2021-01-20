@@ -54,7 +54,7 @@ class _YoutubeVideoPlayerState extends State<YoutubeVideoPlayer> {
       ),
       flags: YoutubePlayerFlags(
         autoPlay: true,
-        mute: true,
+        mute: false,
       ),
     )..addListener(listener);
     _videoMetaData = const YoutubeMetaData();

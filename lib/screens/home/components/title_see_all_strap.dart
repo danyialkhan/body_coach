@@ -16,7 +16,11 @@ class SeeAll extends StatelessWidget {
         children: <Widget>[
           Text(
             title,
-            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+              color: whiteShad
+            ),
           ),
           FlatButton(
             onPressed: onTap,
@@ -25,7 +29,7 @@ class SeeAll extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                color: purpleShad2,
+                color: lightBlue,
               ),
             ),
           ),
