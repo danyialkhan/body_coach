@@ -3,7 +3,6 @@ import 'package:body_coach/screens/authentication/signup/signup_screen.dart';
 import 'package:body_coach/shared/constants.dart';
 import 'package:body_coach/shared/rounded_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 import 'background.dart';
 
@@ -21,13 +20,17 @@ class Body extends StatelessWidget {
               kWelcomeMsg,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: size.height * 0.05),
-//            SvgPicture.asset(
-//              "assets/icons/chat.svg",
-//              height: size.height * 0.45,
-//            ),
-          Image.asset(pImg1),
-            SizedBox(height: size.height * 0.05),
+            SizedBox(height: size.height * 0.3),
+            Container(
+              height: size.height * 0.1,
+              width: size.width * 0.5,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(pLogoLightPath),
+                ),
+              ),
+            ),
+            SizedBox(height: size.height * 0.1),
             RoundedButton(
               text: kLogIn,
               press: () {
@@ -43,7 +46,6 @@ class Body extends StatelessWidget {
             ),
             RoundedButton(
               text: kSignUp,
-              color: kPrimaryColor,
               textColor: Colors.white,
               press: () {
                 Navigator.push(

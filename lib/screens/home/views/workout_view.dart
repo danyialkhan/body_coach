@@ -6,6 +6,7 @@ import 'package:body_coach/models/user.dart';
 import 'package:body_coach/screens/home/components/youtube_player.dart';
 import 'package:body_coach/services/category_service.dart';
 import 'package:body_coach/services/request_service.dart';
+import 'package:body_coach/services/user_service.dart';
 import 'package:body_coach/shared/constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +72,9 @@ class _WorkOutViewState extends State<WorkOutView> {
   Widget _courseContentList(Video video, int index) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      margin: EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+          color: greyShad, borderRadius: BorderRadius.circular(8.0)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -104,7 +108,7 @@ class _WorkOutViewState extends State<WorkOutView> {
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
-                      color: whiteShad,
+                      color: blackShad,
                     ),
                   ),
                 ],
@@ -124,7 +128,7 @@ class _WorkOutViewState extends State<WorkOutView> {
               height: 40.0,
               width: 40.0,
               decoration: BoxDecoration(
-                color: greyShad,
+                color: lightBlue,
                 borderRadius: BorderRadius.circular(20.0),
               ),
               child: Icon(
@@ -143,7 +147,7 @@ class _WorkOutViewState extends State<WorkOutView> {
       case 0:
         return "REQUEST PENDING";
       case 1:
-        return "SUBSCRIBED";
+        return "UN SUBSCRIBE";
       case 2:
         return "REJECTED";
       case 3:
@@ -153,25 +157,11 @@ class _WorkOutViewState extends State<WorkOutView> {
     }
   }
 
-  Color _getButtonColor(int status) {
-    switch (status) {
-      case 0:
-        return Colors.lime;
-      case 1:
-        return Colors.greenAccent;
-      case 2:
-        return Colors.redAccent;
-      case 3:
-        return Color(0xFF6E8AFA);
-      default:
-        return Colors.redAccent;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<User>(context);
     return Scaffold(
+      backgroundColor: whiteShad,
       bottomNavigationBar: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         height: 80.0,
@@ -193,66 +183,79 @@ class _WorkOutViewState extends State<WorkOutView> {
             //SizedBox(width: 10.0),
             _fetchingSubscription
                 ? Center(
-              child: CircularProgressIndicator(
-                backgroundColor: purpleShad,
-              ),
-            )
-                : StreamBuilder<Request>(
-              stream: RequestService(
-                catId: widget.catId,
-                reqId: user.uId,
-              ).requestStatusStream(),
-              builder: (ctx, snapshot) {
-                if (snapshot.hasData) {
-                  Request request = snapshot.data;
-                  return GestureDetector(
-                    onTap: request.reqStatus < 3
-                        ? null
-                        : () async {
-                      if (request.reqStatus == 3) {
-                        _toggleSubscription();
-                        await RequestService(
-                          sender: user.uId,
-                          receiver: widget.ownerId,
-                          reqId: user.uId,
-                          catId: widget.catId,
-                        ).createRequest(
-                          name: widget.userName,
-                          senderImg: widget.userImage,
-                          trainerImg: widget.imageUrl,
-                          trainer: widget.title,
-                        );
-                        _toggleSubscription();
-                      }
-                    },
-                    child: Container(
-                      height: 60.0,
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      decoration: BoxDecoration(
-                        color: lightBlue,
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      child: Center(
-                        child: Text(
-                          _getButtonStatus(request.reqStatus ?? 3),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                } else {
-                  return Center(
                     child: CircularProgressIndicator(
                       backgroundColor: purpleShad,
                     ),
-                  );
-                }
-              },
-            ),
+                  )
+                : StreamBuilder<Request>(
+                    stream: RequestService(
+                      catId: widget.catId,
+                      reqId: user.uId,
+                    ).requestStatusStream(),
+                    builder: (ctx, snapshot) {
+                      if (snapshot.hasData) {
+                        Request request = snapshot.data;
+                        return GestureDetector(
+                          onTap: () async {
+                            _toggleSubscription();
+                            if (request.reqStatus == 3) {
+                              await RequestService(
+                                sender: user.uId,
+                                receiver: widget.ownerId,
+                                reqId: user.uId,
+                                catId: widget.catId,
+                              ).createRequest(
+                                name: widget.userName,
+                                senderImg: widget.userImage,
+                                trainerImg: widget.imageUrl,
+                                trainer: widget.title,
+                              );
+                            } else if (request.reqStatus == 1) {
+                              await CategoryService(
+                                      uId: user.uId, catId: widget.catId)
+                                  .removeSubscriber();
+                              await UserService(uId: user.uId)
+                                  .removeSubscribedCategory(
+                                id: widget.catId,
+                              );
+                              await UserService(uId: widget.ownerId)
+                                  .removeMyStudent(
+                                      id: user.uId, catId: widget.catId);
+                              await RequestService(
+                                reqId: user.uId,
+                                catId: widget.catId,
+                              ).removeRequest();
+                            }
+                            _toggleSubscription();
+                          },
+                          child: Container(
+                            height: 60.0,
+                            width: MediaQuery.of(context).size.width * 0.7,
+                            decoration: BoxDecoration(
+                              color: lightBlue,
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            child: Center(
+                              child: Text(
+                                _getButtonStatus(request.reqStatus ?? 3),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            backgroundColor: purpleShad,
+                          ),
+                        );
+                      }
+                    },
+                  ),
           ],
         ),
       ),
@@ -291,7 +294,7 @@ class _WorkOutViewState extends State<WorkOutView> {
                   top: 0,
                   child: Padding(
                     padding:
-                    EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+                        EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -327,7 +330,7 @@ class _WorkOutViewState extends State<WorkOutView> {
                     height: MediaQuery.of(context).size.height - 400,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
+                      color: whiteShad,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(50.0),
                         topRight: Radius.circular(50.0),
@@ -352,18 +355,17 @@ class _WorkOutViewState extends State<WorkOutView> {
                                   style: TextStyle(
                                       fontSize: 21.0,
                                       fontWeight: FontWeight.bold,
-                                      color: whiteShad),
+                                      color: blackShad),
                                 ),
                               ),
                               Container(
                                 height:
-                                MediaQuery.of(context).size.height * 0.05,
-                                width:
-                                MediaQuery.of(context).size.width * 0.9,
+                                    MediaQuery.of(context).size.height * 0.05,
+                                width: MediaQuery.of(context).size.width * 0.9,
                                 margin:
-                                EdgeInsets.only(left: 20.0, right: 20.0),
+                                    EdgeInsets.only(left: 20.0, right: 20.0),
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: whiteShad),
+                                  border: Border.all(color: blackShad),
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
                                 child: SingleChildScrollView(
@@ -372,7 +374,7 @@ class _WorkOutViewState extends State<WorkOutView> {
                                     child: Text(
                                       widget.desc,
                                       style: TextStyle(
-                                        color: whiteShad,
+                                        color: blackShad,
                                       ),
                                     ),
                                   ),
@@ -389,23 +391,22 @@ class _WorkOutViewState extends State<WorkOutView> {
                                   style: TextStyle(
                                     fontSize: 21.0,
                                     fontWeight: FontWeight.bold,
-                                    color: whiteShad,
+                                    color: blackShad,
                                   ),
                                 ),
                               ),
                               StreamBuilder<List<Video>>(
                                 stream: (req?.reqStatus ?? 0) == 1
                                     ? CategoryService(catId: widget.catId)
-                                    .allVideosStream()
+                                        .allVideosStream()
                                     : CategoryService(catId: widget.catId)
-                                    .previewVideosStream(),
+                                        .previewVideosStream(),
                                 builder: (ctx, snapshot) {
                                   if (snapshot.hasData) {
                                     List<Video> videos = snapshot.data;
                                     return Expanded(
                                       child: Padding(
-                                        padding:
-                                        EdgeInsets.only(bottom: 100.0),
+                                        padding: EdgeInsets.only(bottom: 100.0),
                                         child: ListView.builder(
                                           itemCount: videos?.length ?? 0,
                                           itemBuilder: (BuildContext context,

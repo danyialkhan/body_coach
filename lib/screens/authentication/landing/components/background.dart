@@ -1,4 +1,3 @@
-import 'package:body_coach/shared/constants.dart';
 import 'package:flutter/material.dart';
 
 class Background extends StatelessWidget {
@@ -17,22 +16,6 @@ class Background extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          Positioned(
-            top: 0,
-            left: 0,
-            child: Image.asset(
-              pTopSvg,
-              width: size.width * 0.3,
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: Image.asset(
-              pBottomSvg,
-              width: size.width * 0.2,
-            ),
-          ),
           child,
         ],
       ),

@@ -7,7 +7,6 @@ import 'package:body_coach/shared/rounded_button.dart';
 import 'package:body_coach/shared/rounded_input_field.dart';
 import 'package:body_coach/shared/rounded_password_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class Body extends StatefulWidget {
   @override
@@ -41,12 +40,17 @@ class _BodyState extends State<Body> {
               kSignUp,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: size.height * 0.03),
-            SvgPicture.asset(
-              pSignUpSvg,
-              height: size.height * 0.35,
+            SizedBox(height: size.height * 0.3),
+            Container(
+              height: size.height * 0.1,
+              width: size.width * 0.5,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(pLogoLightPath),
+                ),
+              ),
             ),
-           // SizedBox(height: size.height * 0.03),
+            SizedBox(height: size.height * 0.1),
             RoundedInputField(
               hintText: kYourEmail,
               onChanged: (value) {

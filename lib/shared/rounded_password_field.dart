@@ -26,7 +26,7 @@ class RoundedPasswordField extends StatelessWidget {
           hintText: title,
           icon: Icon(
             Icons.lock,
-            color: kPrimaryColor,
+            color: lightBlue,
           ),
           // suffixIcon: Icon(
           //   Icons.visibility,

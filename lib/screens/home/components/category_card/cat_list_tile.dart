@@ -1,7 +1,9 @@
 import 'package:body_coach/models/category_model.dart';
 import 'package:body_coach/models/request.dart';
 import 'package:body_coach/screens/home/views/workout_view.dart';
+import 'package:body_coach/services/category_service.dart';
 import 'package:body_coach/services/request_service.dart';
+import 'package:body_coach/services/user_service.dart';
 import 'package:body_coach/shared/constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -91,11 +93,9 @@ class _CatListTileState extends State<CatListTile> {
             if (snapshot.hasData) {
               Request request = snapshot.data;
               return GestureDetector(
-                onTap: request.reqStatus < 3
-                    ? null
-                    : () async {
+                onTap: () async {
+                  _toggleSubscription();
                   if (request.reqStatus == 3) {
-                    _toggleSubscription();
                     await RequestService(
                       sender: widget.uId,
                       receiver: widget.model.ownerId,
@@ -107,8 +107,24 @@ class _CatListTileState extends State<CatListTile> {
                       trainerImg: widget.model.imgUrl,
                       trainer: widget.model.title,
                     );
-                    _toggleSubscription();
                   }
+                  else if (request.reqStatus == 1) {
+                    await CategoryService(
+                        uId: widget.uId, catId: widget.model.catId)
+                        .removeSubscriber();
+                    await UserService(uId: widget.uId)
+                        .removeSubscribedCategory(
+                      id: widget.model.catId,
+                    );
+                    await UserService(uId: widget.model.ownerId)
+                        .removeMyStudent(
+                        id: widget.uId, catId: widget.model.catId);
+                    await RequestService(
+                      reqId: widget.uId,
+                      catId: widget.model.catId,
+                    ).removeRequest();
+                  }
+                  _toggleSubscription();
                 },
                 child:Container(
                   padding: EdgeInsets.all(8.0),

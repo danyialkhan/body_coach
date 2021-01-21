@@ -34,18 +34,23 @@ class _BodyState extends State<Body> {
         key: _formKey,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text(
               kLogIn,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: size.height * 0.03),
-//            SvgPicture.asset(
-//              "assets/icons/login.svg",
-//              height: size.height * 0.35,
-//            ),
-            Image.asset(pImg2),
-            SizedBox(height: size.height * 0.03),
+            SizedBox(height: size.height * 0.3),
+            Container(
+              height: size.height * 0.1,
+              width: size.width * 0.5,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(pLogoLightPath),
+                ),
+              ),
+            ),
+            SizedBox(height: size.height * 0.1),
             RoundedInputField(
               hintText: kYourEmail,
               onChanged: (value) {

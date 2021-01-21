@@ -52,7 +52,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
     var profile = Provider.of<User>(context);
     var _mq = MediaQuery.of(context).size;
     return DrawerHeader(
-      decoration: BoxDecoration(color: Theme.of(context).primaryColor),
       child: ListView(
         children: <Widget>[
           Column(
@@ -82,7 +81,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   _userProfile?.name ?? 'User',
                   textScaleFactor: 1.5,
                   style: TextStyle(
-                    color: whiteShad,
+                    color: blackShad,
                   ),
                 ),
               )
@@ -99,7 +98,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             ),
             title: Text(
               'My Profile',
-              style: TextStyle(color: whiteShad),
+              style: TextStyle(color: blackShad),
             ),
           ),
           Divider(),
@@ -113,7 +112,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             },
             title: Text(
               'My Subscriptions',
-              style: TextStyle(color: whiteShad),
+              style: TextStyle(color: blackShad),
             ),
           ),
           Divider(),
@@ -129,7 +128,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   },
                   title: Text(
                     'All Subscribers',
-                    style: TextStyle(color: whiteShad),
+                    style: TextStyle(color: blackShad),
                   ),
                 ),
           !_showAdmin ? Text('') : Divider(),
@@ -143,7 +142,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             title: Text(
               'Logout',
               style: TextStyle(
-                color: whiteShad,
+                color: blackShad,
               ),
             ),
           ),
@@ -162,7 +161,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   title: Text(
                     'Admin',
                     style: TextStyle(
-                      color: whiteShad,
+                      color: blackShad,
                     ),
                   ),
                 ),

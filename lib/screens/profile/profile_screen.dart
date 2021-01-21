@@ -184,7 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   decoration: BoxDecoration(
                                     border: Border(
                                       bottom:
-                                      BorderSide(color: Colors.grey[300]),
+                                          BorderSide(color: Colors.grey[300]),
                                     ),
                                   ),
                                 ),
@@ -481,50 +481,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             MediaQuery.of(context).size.width *
                                                 0.1,
                                       ),
-                                      child: DropdownButtonFormField(
-                                        validator: (val) {
-                                          if (val == 'Gender') {
-                                            return 'Please Select a gender';
-                                          }
-                                          return null;
-                                        },
-                                        value: genderList[
-                                            (userProfile?.gender ?? 0) + 1],
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          focusedBorder: InputBorder.none,
-                                          enabledBorder: InputBorder.none,
-                                          errorBorder: InputBorder.none,
-                                          disabledBorder: InputBorder.none,
+                                      child: Theme(
+                                        data: Theme.of(context).copyWith(
+                                          canvasColor: blackShad,
                                         ),
-                                        style: TextStyle(
-                                          fontFamily: 'Quicksand',
-                                          color: genderList[
-                                                      (userProfile?.gender ??
-                                                              0) +
-                                                          1] ==
-                                                  'Gender'
-                                              ? Colors.grey
-                                              : whiteShad,
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.02,
-                                          fontWeight: FontWeight.bold,
+                                        child: DropdownButtonFormField(
+                                          iconDisabledColor: whiteShad,
+                                          iconEnabledColor: whiteShad,
+                                          validator: (val) {
+                                            if (val == 'Gender') {
+                                              return 'Please Select a gender';
+                                            }
+                                            return null;
+                                          },
+                                          value: genderList[
+                                              (userProfile?.gender ?? 0) + 1],
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            focusedBorder: InputBorder.none,
+                                            enabledBorder: InputBorder.none,
+                                            errorBorder: InputBorder.none,
+                                            disabledBorder: InputBorder.none,
+                                          ),
+                                          style: TextStyle(
+                                            fontFamily: 'Quicksand',
+                                            color: genderList[
+                                                        (userProfile?.gender ??
+                                                                0) +
+                                                            1] ==
+                                                    'Gender'
+                                                ? greyShad
+                                                : whiteShad,
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.02,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          items: genderList.map(
+                                            (gender) {
+                                              return DropdownMenuItem(
+                                                value: gender,
+                                                child: Text(
+                                                  '$gender',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ).toList(),
+                                          onChanged: (val) => setState(() {
+                                            _currentGender =
+                                                genderList.indexWhere(
+                                                    (item) => item == val);
+                                            print(_currentGender);
+                                            _currentGender -= 1;
+                                          }),
                                         ),
-                                        items: genderList.map((gender) {
-                                          return DropdownMenuItem(
-                                            value: gender,
-                                            child: Text('$gender'),
-                                          );
-                                        }).toList(),
-                                        onChanged: (val) => setState(() {
-                                          _currentGender =
-                                              genderList.indexWhere(
-                                                  (item) => item == val);
-                                          print(_currentGender);
-                                          _currentGender -= 1;
-                                        }),
                                       ),
                                     ),
                                   ],
@@ -562,15 +576,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       _toggleLoading();
                                       await UserService(uId: widget.uid)
                                           .updateUser(
-                                        mobileNumber: _phoneNumber ?? userProfile.mobileNumber,
-                                        email: _currentEmail ??
-                                            userProfile.email,
+                                        mobileNumber: _phoneNumber ??
+                                            userProfile.mobileNumber,
+                                        email:
+                                            _currentEmail ?? userProfile.email,
                                         gender: _currentGender ??
                                             (userProfile?.gender ?? 0),
                                         name: _currentName ?? userProfile.name,
                                         dob: _currentDate ?? userProfile.dob,
                                         imgUrl: userProfile.imgUrl,
-                                        therapist: _therapist ?? userProfile.therapist,
+                                        therapist:
+                                            _therapist ?? userProfile.therapist,
                                       );
                                       _toggleLoading();
                                     }

@@ -1,4 +1,3 @@
-import 'package:body_coach/shared/constants.dart';
 import 'package:flutter/material.dart';
 
 import 'components/body.dart';
@@ -7,7 +6,6 @@ class LandingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Body(),
     );
   }
