@@ -6,12 +6,14 @@ class PriceField extends StatelessWidget {
   final Function onChanged;
   final Function onValidate;
   final TextEditingController controller;
+  final Color color;
 
   PriceField({
     this.onSaved,
     this.onValidate,
     this.controller,
     this.onChanged,
+    this.color,
   });
   @override
   Widget build(BuildContext context) {
@@ -37,13 +39,18 @@ class PriceField extends StatelessWidget {
             keyboardType: TextInputType.number,
             cursorColor: kPrimaryColor,
             decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: '\$0.00',
-            ),
+                border: InputBorder.none,
+                hintText: '\$0.00',
+                hintStyle: TextStyle(
+                  color: color,
+                )),
             onSaved: onSaved,
             onChanged: onChanged,
             validator: onValidate,
             controller: controller,
+            style: TextStyle(
+              color: color,
+            ),
           ),
         ),
       ],

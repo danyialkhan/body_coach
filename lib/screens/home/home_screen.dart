@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     SizedBox(height: 20.0),
                     Text(
-                      _isLoading ? "Hey ...," : 'Hey, ${_userProfile?.name}',
+                      _isLoading ? "Hey ...," : 'Hey ${_userProfile?.name},',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 28.0,

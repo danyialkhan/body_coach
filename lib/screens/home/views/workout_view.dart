@@ -147,7 +147,7 @@ class _WorkOutViewState extends State<WorkOutView> {
       case 0:
         return "REQUEST PENDING";
       case 1:
-        return "UN SUBSCRIBE";
+        return "Cancel Subscription";
       case 2:
         return "REJECTED";
       case 3:

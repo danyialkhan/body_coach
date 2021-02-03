@@ -6,12 +6,14 @@ class SubsButton extends StatelessWidget {
   final String selectionSubscription;
   final Function onChanged;
   final Function onValidate;
+  final Color color;
 
   SubsButton({
     this.selectionSubscription,
     this.subscriptions,
     this.onChanged,
     this.onValidate,
+    this.color,
   });
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,10 @@ class SubsButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(5.0),
             ),
             child: DropdownButtonFormField(
-              hint: Text('Select Type'),
+              hint: Text('Select Type',
+                  style: TextStyle(
+                    color: color,
+                  )),
               validator: onValidate,
               value: selectionSubscription,
               onChanged: onChanged,
@@ -46,6 +51,9 @@ class SubsButton extends StatelessWidget {
                   value: e,
                 );
               }).toList(),
+              style: TextStyle(
+                color: color,
+              ),
             ),
           ),
         ],

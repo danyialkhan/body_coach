@@ -8,6 +8,7 @@ class DurationField extends StatelessWidget {
   final TextEditingController hrController;
   final TextEditingController minController;
   final TextEditingController secController;
+  final Color color;
 
   DurationField({
     this.onSecSaved,
@@ -16,6 +17,7 @@ class DurationField extends StatelessWidget {
     this.hrController,
     this.minController,
     this.secController,
+    this.color,
   });
   @override
   Widget build(BuildContext context) {
@@ -49,9 +51,12 @@ class DurationField extends StatelessWidget {
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: '00',
-              ),
+                  border: InputBorder.none,
+                  hintText: '00',
+                  hintStyle: TextStyle(
+                    color: color,
+                  )),
+              style: TextStyle(color: color),
             ),
           ),
           Text(
@@ -80,9 +85,12 @@ class DurationField extends StatelessWidget {
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: '00',
-              ),
+                  border: InputBorder.none,
+                  hintText: '00',
+                  hintStyle: TextStyle(
+                    color: color,
+                  )),
+              style: TextStyle(color: color),
             ),
           ),
           Text(
@@ -111,9 +119,12 @@ class DurationField extends StatelessWidget {
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: '00',
-              ),
+                  border: InputBorder.none,
+                  hintText: '00',
+                  hintStyle: TextStyle(
+                    color: color,
+                  )),
+              style: TextStyle(color: color),
             ),
           ),
           Text(

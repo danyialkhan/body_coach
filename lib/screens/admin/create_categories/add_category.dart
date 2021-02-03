@@ -57,10 +57,9 @@ class _AddCategoryState extends State<AddCategory> {
     });
   }
 
-
   @override
   void didChangeDependencies() {
-    if(!_isRun){
+    if (!_isRun) {
       Provider.of<AllVideos>(context, listen: false).clear();
       _isRun = false;
     }
@@ -105,6 +104,7 @@ class _AddCategoryState extends State<AddCategory> {
                 CatField(
                   title: 'Title ',
                   hint: 'title',
+                  color: whiteShad,
                   onSaved: (val) {
                     _title = val;
                   },
@@ -118,6 +118,7 @@ class _AddCategoryState extends State<AddCategory> {
                 DescriptionField(
                   title: 'Description ',
                   hint: 'description...',
+                  color: whiteShad,
                   onSaved: (val) {
                     _description = val;
                   },
@@ -129,6 +130,7 @@ class _AddCategoryState extends State<AddCategory> {
                   },
                 ),
                 SubsButton(
+                  color: whiteShad,
                   onChanged: (val) {
                     setState(
                       () {
@@ -154,9 +156,10 @@ class _AddCategoryState extends State<AddCategory> {
                   subscriptions: _subscription,
                 ),
                 IsFeaturedButton(
+                  color: whiteShad,
                   onChanged: (val) {
                     setState(
-                          () {
+                      () {
                         _selectionFeatured = val;
                         switch (val) {
                           case 'Yes':
@@ -178,6 +181,7 @@ class _AddCategoryState extends State<AddCategory> {
                 ),
                 _showPrice
                     ? PriceField(
+                        color: whiteShad,
                         onSaved: (val) {
                           _price = val;
                           print('PRICE: $_price');

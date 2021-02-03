@@ -106,7 +106,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (ctx) => AllSubscriptions(),
+                  builder: (ctx) => AllSubscriptions(
+                    userProfile: _userProfile,
+                  ),
                 ),
               );
             },
@@ -136,7 +138,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
             onTap: () async {
               await Auth().logOut();
               Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => LandingScreen(),),
+                  MaterialPageRoute(
+                    builder: (context) => LandingScreen(),
+                  ),
                   (Route<dynamic> route) => false);
             },
             title: Text(

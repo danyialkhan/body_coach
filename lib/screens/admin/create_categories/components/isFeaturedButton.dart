@@ -6,12 +6,14 @@ class IsFeaturedButton extends StatelessWidget {
   final String selectionSubscription;
   final Function onChanged;
   final Function onValidate;
+  final Color color;
 
   IsFeaturedButton({
     this.selectionSubscription,
     this.subscriptions,
     this.onChanged,
     this.onValidate,
+    this.color,
   });
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,12 @@ class IsFeaturedButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(5.0),
             ),
             child: DropdownButtonFormField(
-              hint: Text('Featured'),
+              hint: Text(
+                'Featured',
+                style: TextStyle(
+                  color: color,
+                ),
+              ),
               validator: onValidate,
               value: selectionSubscription,
               onChanged: onChanged,
@@ -46,6 +53,9 @@ class IsFeaturedButton extends StatelessWidget {
                   value: e,
                 );
               }).toList(),
+              style: TextStyle(
+                color: color,
+              ),
             ),
           ),
         ],

@@ -88,6 +88,7 @@ class _AddVideoLinkState extends State<AddVideoLink> {
               controller: _titleController,
               title: 'Video Title ',
               hint: 'Title.',
+              color: whiteShad,
               onSaved: (val) {
                 _videoTitle = val;
               },
@@ -102,6 +103,7 @@ class _AddVideoLinkState extends State<AddVideoLink> {
               controller: _linkController,
               title: 'Video Link ',
               hint: 'https://-----',
+              color: whiteShad,
               onSaved: (val) {
                 _videoLink = val;
               },
@@ -120,6 +122,7 @@ class _AddVideoLinkState extends State<AddVideoLink> {
               hrController: _hrController,
               minController: _minController,
               secController: _secController,
+              color: whiteShad,
               onHourSaved: (val) {
                 _hr = val;
               },
@@ -130,16 +133,14 @@ class _AddVideoLinkState extends State<AddVideoLink> {
                 _sec = val;
               },
             ),
-
             IsPreviewChkBox(
               value: _isPreview ?? widget.isPreview ?? false,
               onChanged: (value) {
-                  setState(() {
-                    _isPreview = value;
-                  });
+                setState(() {
+                  _isPreview = value;
+                });
               },
             ),
-
             _isLoading
                 ? Center(
                     child: CircularProgressIndicator(
@@ -170,7 +171,8 @@ class _AddVideoLinkState extends State<AddVideoLink> {
                                 link: _videoLink,
                                 min: _min,
                                 sec: _sec,
-                                isPreview: _isPreview ?? widget.isPreview ?? false,
+                                isPreview:
+                                    _isPreview ?? widget.isPreview ?? false,
                               );
                               if (!widget.updateVideo) {
                                 video.setVideo(vid);

@@ -3,7 +3,6 @@ import 'package:body_coach/screens/authentication/signup/signup_screen.dart';
 import 'package:body_coach/shared/constants.dart';
 import 'package:body_coach/shared/rounded_button.dart';
 import 'package:flutter/material.dart';
-
 import 'background.dart';
 
 class Body extends StatelessWidget {

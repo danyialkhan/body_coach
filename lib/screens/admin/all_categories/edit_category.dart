@@ -104,7 +104,7 @@ class _EditCategoryState extends State<EditCategory> {
   }
 
   _toggleIsLoading() {
-    if(!mounted) return;
+    if (!mounted) return;
     setState(() {
       _isLoading = !_isLoading;
     });
@@ -143,6 +143,7 @@ class _EditCategoryState extends State<EditCategory> {
                   CatField(
                     title: 'Title ',
                     hint: 'title',
+                    color: whiteShad,
                     onSaved: (val) {
                       _title = val;
                     },
@@ -157,6 +158,7 @@ class _EditCategoryState extends State<EditCategory> {
                   DescriptionField(
                     title: 'Description ',
                     hint: 'description...',
+                    color: whiteShad,
                     onSaved: (val) {
                       _description = val;
                     },
@@ -169,6 +171,7 @@ class _EditCategoryState extends State<EditCategory> {
                     },
                   ),
                   SubsButton(
+                    color: whiteShad,
                     onChanged: (val) {
                       setState(
                         () {
@@ -194,6 +197,7 @@ class _EditCategoryState extends State<EditCategory> {
                     subscriptions: _subscription,
                   ),
                   IsFeaturedButton(
+                    color: whiteShad,
                     onChanged: (val) {
                       setState(
                         () {
@@ -218,6 +222,7 @@ class _EditCategoryState extends State<EditCategory> {
                   ),
                   _showPrice
                       ? PriceField(
+                          color: whiteShad,
                           controller: priceController,
                           onSaved: (val) {
                             _price = val;

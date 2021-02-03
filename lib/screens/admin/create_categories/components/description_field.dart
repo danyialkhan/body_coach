@@ -8,6 +8,7 @@ class DescriptionField extends StatelessWidget {
   final Function onValidate;
   final String hint;
   final TextEditingController controller;
+  final Color color;
 
   DescriptionField({
     this.onSaved,
@@ -16,6 +17,7 @@ class DescriptionField extends StatelessWidget {
     this.hint,
     this.controller,
     this.onChanged,
+    this.color,
   });
   @override
   Widget build(BuildContext context) {
@@ -49,8 +51,13 @@ class DescriptionField extends StatelessWidget {
               onChanged: onChanged,
               cursorColor: kPrimaryColor,
               decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: hint,
+                  border: InputBorder.none,
+                  hintText: hint,
+                  hintStyle: TextStyle(
+                    color: color,
+                  )),
+              style: TextStyle(
+                color: color,
               ),
             ),
           ),

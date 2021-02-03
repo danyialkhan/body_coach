@@ -8,6 +8,7 @@ class CatField extends StatelessWidget {
   final Function onValidate;
   final String hint;
   final TextEditingController controller;
+  final Color color;
 
   CatField({
     this.onSaved,
@@ -16,6 +17,7 @@ class CatField extends StatelessWidget {
     this.hint,
     this.controller,
     this.onChanged,
+    this.color,
   });
   @override
   Widget build(BuildContext context) {
@@ -46,8 +48,13 @@ class CatField extends StatelessWidget {
               onChanged: onChanged,
               cursorColor: kPrimaryColor,
               decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: hint,
+                  border: InputBorder.none,
+                  hintText: hint,
+                  hintStyle: TextStyle(
+                    color: color,
+                  )),
+              style: TextStyle(
+                color: color,
               ),
             ),
           ),
