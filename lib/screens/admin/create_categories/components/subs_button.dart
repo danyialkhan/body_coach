@@ -37,22 +37,27 @@ class SubsButton extends StatelessWidget {
               border: Border.all(color: whiteShad),
               borderRadius: BorderRadius.circular(5.0),
             ),
-            child: DropdownButtonFormField(
-              hint: Text('Select Type',
-                  style: TextStyle(
-                    color: color,
-                  )),
-              validator: onValidate,
-              value: selectionSubscription,
-              onChanged: onChanged,
-              items: subscriptions.map((e) {
-                return DropdownMenuItem(
-                  child: Text(e),
-                  value: e,
-                );
-              }).toList(),
-              style: TextStyle(
-                color: color,
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                canvasColor: blackShad,
+              ),
+              child: DropdownButtonFormField(
+                hint: Text('Select Type',
+                    style: TextStyle(
+                      color: color,
+                    )),
+                validator: onValidate,
+                value: selectionSubscription,
+                onChanged: onChanged,
+                items: subscriptions.map((e) {
+                  return DropdownMenuItem(
+                    child: Text(e),
+                    value: e,
+                  );
+                }).toList(),
+                style: TextStyle(
+                  color: color,
+                ),
               ),
             ),
           ),

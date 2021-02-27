@@ -1,6 +1,7 @@
 import 'package:body_coach/models/category_model.dart';
 import 'package:body_coach/models/subscribers.dart';
 import 'package:body_coach/models/user.dart';
+import 'package:body_coach/screens/home/components/category_card/see_all_cat.dart';
 import 'package:body_coach/screens/home/components/my_library/lib_card.dart';
 import 'package:body_coach/services/category_service.dart';
 import 'package:body_coach/services/user_service.dart';
@@ -31,40 +32,71 @@ class SeeAllLib extends StatelessWidget {
           builder: (ctx, snapshot) {
             if (snapshot.hasData) {
               List<Subscribers> models = snapshot.data;
-              return ListView.builder(
-                shrinkWrap: false,
-                itemCount: models.length,
-                itemBuilder: (ctx, i) {
-                  return Container(
-                    width: _mq.width * 0.9,
-                    child: FutureBuilder<CategoryModel>(
-                      future: CategoryService(catId: models[i].subCat)
-                          .getCategory(),
-                      builder: (ctx, cat) {
-                        if (cat.hasData) {
-                          CategoryModel categoryModel = cat.data;
-                          return LibCard(
-                            categoryModel: categoryModel,
-                            userName: userName,
-                            imgUrl: imgUrl,
-                          );
-                        } else {
-                          return Container(
-                            width: _mq.width * 0.4,
-                            height: _mq.height * 0.1,
-                            margin: EdgeInsets.symmetric(
-                                vertical: 5.0, horizontal: 5.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
+              return models.isEmpty
+                  ? Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              color: whiteShad,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        child: FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (ctx) => SeeAllCat(
+                                  title: kCat,
+                                  userName: userName,
+                                  imgUrl: imgUrl,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'Request my program',
+                            style: TextStyle(
+                              fontSize: 16.0,
                               color: whiteShad,
                             ),
-                          );
-                        }
+                          ),
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      shrinkWrap: false,
+                      itemCount: models.length,
+                      itemBuilder: (ctx, i) {
+                        return Container(
+                          width: _mq.width * 0.9,
+                          child: FutureBuilder<CategoryModel>(
+                            future: CategoryService(catId: models[i].subCat)
+                                .getCategory(),
+                            builder: (ctx, cat) {
+                              if (cat.hasData) {
+                                CategoryModel categoryModel = cat.data;
+                                return LibCard(
+                                  categoryModel: categoryModel,
+                                  userName: userName,
+                                  imgUrl: imgUrl,
+                                );
+                              } else {
+                                return Container(
+                                  width: _mq.width * 0.4,
+                                  height: _mq.height * 0.1,
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 5.0, horizontal: 5.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    color: whiteShad,
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        );
                       },
-                    ),
-                  );
-                },
-              );
+                    );
             } else {
               return Center(
                 child: CircularProgressIndicator(
